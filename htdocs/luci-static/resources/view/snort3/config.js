@@ -401,7 +401,6 @@ return view.extend({
 		});
 	},
 
-	handleSaveApply: null,
 	handleSave: null,
 	handleReset: null
 });
