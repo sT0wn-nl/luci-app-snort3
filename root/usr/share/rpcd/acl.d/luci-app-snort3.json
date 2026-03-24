@@ -10,7 +10,8 @@
 					"getAlerts",
 					"getRecentAlerts",
 					"checkUpdateStatus",
-					"getRulesInfo"
+					"getRulesInfo",
+					"getInterfaces"
 				],
 				"file": ["read", "stat", "exec"]
 			}
@@ -23,7 +24,8 @@
 					"serviceAction",
 					"updateRules",
 					"cleanupTemp",
-					"fixRules"
+					"fixRules",
+					"clearAlerts"
 				]
 			}
 		}

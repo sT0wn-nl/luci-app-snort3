@@ -275,6 +275,37 @@ get_rules_info() {
 	json_dump
 }
 
+get_interfaces() {
+	json_init
+	json_add_array "interfaces"
+	for iface in /sys/class/net/*; do
+		name=$(basename "$iface")
+		[ "$name" = "lo" ] && continue
+		json_add_string "" "$name"
+	done
+	json_close_array
+	json_dump
+}
+
+clear_alerts() {
+	local alert_file=$(get_alert_file)
+	local success=0
+	local message=""
+
+	if [ -n "$alert_file" ] && [ -f "$alert_file" ]; then
+		: > "$alert_file"
+		success=1
+		message="Alerts cleared"
+	else
+		message="No alert file found"
+	fi
+
+	json_init
+	json_add_boolean "success" "$success"
+	json_add_string "message" "$message"
+	json_dump
+}
+
 case "$1" in
 	list)
 		echo '{'
@@ -286,7 +317,9 @@ case "$1" in
 		echo '  "checkUpdateStatus": {},'
 		echo '  "cleanupTemp": {},'
 		echo '  "fixRules": {},'
-		echo '  "getRulesInfo": {}'
+		echo '  "getRulesInfo": {},'
+		echo '  "getInterfaces": {},'
+		echo '  "clearAlerts": {}'
 		echo '}'
 		;;
 	call)
@@ -300,6 +333,8 @@ case "$1" in
 			cleanupTemp) cleanup_temp ;;
 			fixRules) fix_rules ;;
 			getRulesInfo) get_rules_info ;;
+			getInterfaces) get_interfaces ;;
+			clearAlerts) clear_alerts ;;
 		esac
 		;;
 esac

@@ -10,20 +10,20 @@
 			"uci": { "snort": true }
 		}
 	},
-	"admin/services/snort3/config": {
-		"title": "Configuration",
+	"admin/services/snort3/status": {
+		"title": "Status",
 		"order": 1,
 		"action": {
 			"type": "view",
-			"path": "snort3/config"
+			"path": "snort3/status"
 		}
 	},
-	"admin/services/snort3/status": {
-		"title": "Status",
+	"admin/services/snort3/config": {
+		"title": "Configuration",
 		"order": 2,
 		"action": {
 			"type": "view",
-			"path": "snort3/status"
+			"path": "snort3/config"
 		}
 	},
 	"admin/services/snort3/alerts": {

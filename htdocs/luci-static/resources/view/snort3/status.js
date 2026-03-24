@@ -79,13 +79,11 @@ return view.extend({
 		});
 
 		var view = E('div', {}, [
-			E('h2', {}, _('Snort IDS/IPS')),
+			E('h2', {}, _('Snort IDS/IPS - Status')),
 
 			E('div', { 'class': 'cbi-section' }, [
 				E('h3', {}, _('Service Status')),
-				E('div', {
-					'class': 'cbi-value'
-				}, E('table', { 'class': 'table', 'style': 'width:100%' }, tableRows))
+				E('table', { 'class': 'table', 'style': 'width:100%' }, tableRows)
 			]),
 
 			E('div', { 'class': 'cbi-section' }, [
@@ -111,21 +109,6 @@ return view.extend({
 						'class': 'cbi-button cbi-button-remove', 'style': 'margin:5px',
 						'click': function() { return doAction('disable'); }
 					}, _('Disable at boot'))
-				])
-			]),
-
-			E('div', { 'class': 'cbi-section' }, [
-				E('h3', {}, _('Quick actions')),
-				E('div', { 'style': 'padding:15px' }, [
-					E('a', {
-						'href': L.url('admin/services/snort3/alerts'),
-						'class': 'cbi-button cbi-button-apply'
-					}, _('See alerts')),
-					' ',
-					E('a', {
-						'href': L.url('admin/services/snort3/config'),
-						'class': 'cbi-button cbi-button-neutral'
-					}, _('Full configuration'))
 				])
 			])
 		]);
