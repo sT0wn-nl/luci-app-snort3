@@ -1,0 +1,31 @@
+{
+	"luci-app-snort3": {
+		"description": "Grant access to Snort3 IDS/IPS configuration",
+		"read": {
+			"uci": ["snort"],
+			"ubus": {
+				"luci": ["getInitList"],
+				"luci.snort3": [
+					"getStatus",
+					"getAlerts",
+					"getRecentAlerts",
+					"checkUpdateStatus",
+					"getRulesInfo"
+				],
+				"file": ["read", "stat", "exec"]
+			}
+		},
+		"write": {
+			"uci": ["snort"],
+			"ubus": {
+				"luci": ["setInitAction"],
+				"luci.snort3": [
+					"serviceAction",
+					"updateRules",
+					"cleanupTemp",
+					"fixRules"
+				]
+			}
+		}
+	}
+}

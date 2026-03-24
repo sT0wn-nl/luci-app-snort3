@@ -1,0 +1,286 @@
+#!/bin/sh
+# rpcd plugin for LuCI Snort3 module
+# Copyright (C) 2025 David Dzieciol <david.dzieciol51100@gmail.com>
+# Licensed under GNU General Public License v2
+
+. /usr/share/libubox/jshn.sh
+
+LOCK_FILE="/tmp/snort_rules_update.lock"
+LOG_FILE="/tmp/snort_rules_update.log"
+
+get_status() {
+	local running=0
+	local pid=""
+	local mem_usage="N/A"
+	local mem_total=0
+	local mem_free=0
+	local mem_used=0
+	local mem_percent=0
+	local alert_count=0
+	local interface="N/A"
+	local mode="N/A"
+	local method="N/A"
+
+	if /etc/init.d/snort status >/dev/null 2>&1; then
+		running=1
+	fi
+
+	pid=$(ps | grep '/usr/bin/snort' | grep -v grep | awk '{print $1}')
+	if [ -n "$pid" ]; then
+		mem_usage=$(ps | grep "^[ ]*${pid}" | awk '{print $5}')
+	fi
+
+	mem_total=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
+	mem_free=$(awk '/MemFree/ {print $2}' /proc/meminfo)
+	mem_used=$((mem_total - mem_free))
+	if [ "$mem_total" -gt 0 ]; then
+		mem_percent=$((mem_used * 100 / mem_total))
+	fi
+
+	if [ -f /var/log/alert_fast.txt ]; then
+		alert_count=$(wc -l < /var/log/alert_fast.txt)
+	fi
+
+	# Read UCI config
+	interface=$(uci -q get snort.snort.interface || echo "N/A")
+	mode=$(uci -q get snort.snort.mode || echo "N/A")
+	method=$(uci -q get snort.snort.method || echo "N/A")
+
+	json_init
+	json_add_boolean "running" "$running"
+	json_add_string "pid" "${pid:-N/A}"
+	json_add_string "mem_usage" "${mem_usage:-N/A}"
+	json_add_int "mem_total" "$((mem_total / 1024))"
+	json_add_int "mem_used" "$((mem_used / 1024))"
+	json_add_int "mem_free" "$((mem_free / 1024))"
+	json_add_int "mem_percent" "$mem_percent"
+	json_add_int "alert_count" "$alert_count"
+	json_add_string "interface" "$interface"
+	json_add_string "mode" "$mode"
+	json_add_string "method" "$method"
+	json_dump
+}
+
+service_action() {
+	local action
+	read -r input
+	json_load "$input"
+	json_get_var action "action"
+
+	local success=0
+	local message=""
+
+	case "$action" in
+		start)
+			/etc/init.d/snort start >/dev/null 2>&1
+			success=1
+			message="Snort started"
+			;;
+		stop)
+			/etc/init.d/snort stop >/dev/null 2>&1
+			success=1
+			message="Snort stopped"
+			;;
+		restart)
+			/etc/init.d/snort restart >/dev/null 2>&1
+			success=1
+			message="Snort restarted"
+			;;
+		enable)
+			/etc/init.d/snort enable >/dev/null 2>&1
+			success=1
+			message="Auto-start enabled"
+			;;
+		disable)
+			/etc/init.d/snort disable >/dev/null 2>&1
+			success=1
+			message="Auto-start disabled"
+			;;
+		*)
+			message="Unknown action"
+			;;
+	esac
+
+	json_init
+	json_add_boolean "success" "$success"
+	json_add_string "message" "$message"
+	json_dump
+}
+
+get_alerts() {
+	local alerts=""
+	local logs=""
+
+	if [ -f /var/log/alert_fast.txt ]; then
+		alerts=$(tail -50 /var/log/alert_fast.txt | tac 2>/dev/null || tail -50 /var/log/alert_fast.txt)
+	fi
+
+	logs=$(logread 2>/dev/null | grep snort | tail -20 | tac 2>/dev/null || logread 2>/dev/null | grep snort | tail -20)
+
+	json_init
+	json_add_string "alerts" "$alerts"
+	json_add_string "logs" "$logs"
+	json_dump
+}
+
+get_recent_alerts() {
+	local alerts=""
+	local count=0
+
+	if [ -f /var/log/alert_fast.txt ]; then
+		alerts=$(tail -10 /var/log/alert_fast.txt | tac 2>/dev/null || tail -10 /var/log/alert_fast.txt)
+		count=$(wc -l < /var/log/alert_fast.txt)
+	fi
+
+	json_init
+	json_add_string "alerts" "$alerts"
+	json_add_int "count" "$count"
+	json_dump
+}
+
+update_rules() {
+	if [ -f "$LOCK_FILE" ]; then
+		json_init
+		json_add_boolean "success" 0
+		json_add_string "message" "Update already in progress"
+		json_dump
+		return
+	fi
+
+	touch "$LOCK_FILE"
+
+	(
+		/usr/bin/snort-rules > "$LOG_FILE" 2>&1
+		rm -f /var/snort.d/*.tar.gz /tmp/snort*.tar.gz 2>/dev/null
+		rm -f /var/snort.d/rules/*.tar.gz 2>/dev/null
+		rm -f "$LOCK_FILE"
+		echo 'FINISHED' >> "$LOG_FILE"
+	) &
+
+	json_init
+	json_add_boolean "success" 1
+	json_add_string "message" "Update launched in background"
+	json_dump
+}
+
+check_update_status() {
+	local is_running=0
+	local is_finished=0
+	local log_content=""
+
+	if [ -f "$LOCK_FILE" ]; then
+		is_running=1
+	fi
+
+	if [ -f "$LOG_FILE" ]; then
+		log_content=$(tail -20 "$LOG_FILE")
+		if echo "$log_content" | grep -q "FINISHED"; then
+			is_finished=1
+			is_running=0
+		fi
+	fi
+
+	json_init
+	json_add_boolean "running" "$is_running"
+	json_add_boolean "finished" "$is_finished"
+	json_add_string "log" "$log_content"
+	json_dump
+}
+
+cleanup_temp() {
+	rm -f /var/snort.d/*.tar.gz /tmp/snort*.tar.gz 2>/dev/null
+	rm -f /var/snort.d/rules/*.tar.gz 2>/dev/null
+	rm -f "$LOG_FILE" 2>/dev/null
+	rm -f "$LOCK_FILE" 2>/dev/null
+
+	json_init
+	json_add_boolean "success" 1
+	json_add_string "message" "Temporary files cleaned"
+	json_dump
+}
+
+fix_rules() {
+	local config_rules="/etc/snort/rules"
+	local temp_rules="/var/snort.d/rules"
+	local success=0
+	local message=""
+
+	if [ -d "$temp_rules" ]; then
+		if [ -d "$config_rules" ] && [ ! -L "$config_rules" ]; then
+			mv "$config_rules" "${config_rules}.backup" 2>/dev/null
+			message="Old directory backed up. "
+		elif [ -L "$config_rules" ]; then
+			rm "$config_rules"
+		fi
+
+		if ln -sf "$temp_rules" "$config_rules"; then
+			success=1
+			message="${message}Symbolic link created successfully"
+		else
+			message="${message}Error creating symbolic link"
+		fi
+	else
+		message="Directory does not exist: ${temp_rules}"
+	fi
+
+	json_init
+	json_add_boolean "success" "$success"
+	json_add_string "message" "$message"
+	json_dump
+}
+
+get_rules_info() {
+	local config_rules="/etc/snort/rules"
+	local temp_rules="/var/snort.d/rules"
+	local symlink_active=0
+	local symlink_target=""
+	local rules_in_temp=0
+	local rule_count=0
+
+	if [ -L "$config_rules" ]; then
+		symlink_active=1
+		symlink_target=$(readlink "$config_rules")
+	fi
+
+	if [ -d "$temp_rules" ]; then
+		rules_in_temp=1
+	fi
+
+	rule_count=$(find /etc/snort/rules -name '*.rules' 2>/dev/null | wc -l)
+
+	json_init
+	json_add_boolean "symlink_active" "$symlink_active"
+	json_add_string "symlink_target" "$symlink_target"
+	json_add_boolean "rules_in_temp" "$rules_in_temp"
+	json_add_int "rule_count" "$rule_count"
+	json_dump
+}
+
+case "$1" in
+	list)
+		echo '{'
+		echo '  "getStatus": {},'
+		echo '  "serviceAction": { "action": "str" },'
+		echo '  "getAlerts": {},'
+		echo '  "getRecentAlerts": {},'
+		echo '  "updateRules": {},'
+		echo '  "checkUpdateStatus": {},'
+		echo '  "cleanupTemp": {},'
+		echo '  "fixRules": {},'
+		echo '  "getRulesInfo": {}'
+		echo '}'
+		;;
+	call)
+		case "$2" in
+			getStatus) get_status ;;
+			serviceAction) service_action ;;
+			getAlerts) get_alerts ;;
+			getRecentAlerts) get_recent_alerts ;;
+			updateRules) update_rules ;;
+			checkUpdateStatus) check_update_status ;;
+			cleanupTemp) cleanup_temp ;;
+			fixRules) fix_rules ;;
+			getRulesInfo) get_rules_info ;;
+		esac
+		;;
+esac

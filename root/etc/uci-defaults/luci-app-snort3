@@ -1,0 +1,25 @@
+#!/bin/sh
+# Ensure snort UCI config exists
+if [ ! -f /etc/config/snort ]; then
+	touch /etc/config/snort
+	uci set snort.snort=snort
+	uci set snort.snort.enabled='0'
+	uci set snort.snort.manual='1'
+	uci set snort.snort.interface='br-lan'
+	uci set snort.snort.home_net='192.168.1.0/24'
+	uci set snort.snort.external_net='any'
+	uci set snort.snort.mode='ids'
+	uci set snort.snort.method='pcap'
+	uci set snort.snort.snaplen='1518'
+	uci set snort.snort.logging='1'
+	uci set snort.snort.log_dir='/var/log'
+	uci set snort.snort.config_dir='/etc/snort'
+	uci set snort.snort.temp_dir='/var/snort.d'
+	uci set snort.snort.action='default'
+	uci commit snort
+fi
+
+# Restart rpcd to pick up the new plugin
+/etc/init.d/rpcd restart
+
+exit 0

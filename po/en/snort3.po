@@ -1,0 +1,310 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: en\n"
+
+msgid "Snort IDS/IPS"
+msgstr "Snort IDS/IPS"
+
+msgid "Snort is an open source intrusion detection and prevention system."
+msgstr "Snort is an open source intrusion detection and prevention system."
+
+msgid "Service Status"
+msgstr "Service Status"
+
+msgid "State"
+msgstr "State"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Alerts"
+msgstr "Alerts"
+
+msgid "Recent Alerts"
+msgstr "Recent Alerts"
+
+msgid "Configuration"
+msgstr "Configuration"
+
+msgid "Enable Snort"
+msgstr "Enable Snort"
+
+msgid "Enable or disable Snort service"
+msgstr "Enable or disable Snort service"
+
+msgid "Manual mode"
+msgstr "Manual mode"
+
+msgid "Use manual configuration (snort.lua)"
+msgstr "Use manual configuration (snort.lua)"
+
+msgid "Network interface"
+msgstr "Network interface"
+
+msgid "Network interface to monitor (e.g. br-lan, eth0)"
+msgstr "Network interface to monitor (e.g. br-lan, eth0)"
+
+msgid "Local network"
+msgstr "Local network"
+
+msgid "IP address range to protect"
+msgstr "IP address range to protect"
+
+msgid "External network"
+msgstr "External network"
+
+msgid "External IP address range"
+msgstr "External IP address range"
+
+msgid "Operating mode"
+msgstr "Operating mode"
+
+msgid "IDS = Detection only, IPS = Active prevention"
+msgstr "IDS = Detection only, IPS = Active prevention"
+
+msgid "Detection"
+msgstr "Detection"
+
+msgid "Prevention"
+msgstr "Prevention"
+
+msgid "DAQ method"
+msgstr "DAQ method"
+
+msgid "Packet acquisition method"
+msgstr "Packet acquisition method"
+
+msgid "Recommended"
+msgstr "Recommended"
+
+msgid "for IPS"
+msgstr "for IPS"
+
+msgid "Capture Length"
+msgstr "Capture Length"
+
+msgid "Maximum packet capture size"
+msgstr "Maximum packet capture size"
+
+msgid "Logging configuration"
+msgstr "Logging configuration"
+
+msgid "Enable logging"
+msgstr "Enable logging"
+
+msgid "Enable event logging"
+msgstr "Enable event logging"
+
+msgid "Log directory"
+msgstr "Log directory"
+
+msgid "Path where logs will be stored"
+msgstr "Path where logs will be stored"
+
+msgid "Configuration directory"
+msgstr "Configuration directory"
+
+msgid "Snort configuration directory path"
+msgstr "Snort configuration directory path"
+
+msgid "Temporary directory"
+msgstr "Temporary directory"
+
+msgid "Directory for temporary files and downloaded rules"
+msgstr "Directory for temporary files and downloaded rules"
+
+msgid "Rules management"
+msgstr "Rules management"
+
+msgid "Rules location"
+msgstr "Rules location"
+
+msgid "Oinkcode"
+msgstr "Oinkcode"
+
+msgid "Access code to download official Snort rules (optional)"
+msgstr "Access code to download official Snort rules (optional)"
+
+msgid "Enter your Oinkcode if you have one"
+msgstr "Enter your Oinkcode if you have one"
+
+msgid "Rule action"
+msgstr "Rule action"
+
+msgid "Default action for rules"
+msgstr "Default action for rules"
+
+msgid "Default"
+msgstr "Default"
+
+msgid "Alert"
+msgstr "Alert"
+
+msgid "Block"
+msgstr "Block"
+
+msgid "Drop"
+msgstr "Drop"
+
+msgid "Reject"
+msgstr "Reject"
+
+msgid "Update rules"
+msgstr "Update rules"
+
+msgid "Update"
+msgstr "Update"
+
+msgid "Update status"
+msgstr "Update status"
+
+msgid "Click on \"Update\" to start the rules update"
+msgstr "Click on \"Update\" to start the rules update"
+
+msgid "Update in progress..."
+msgstr "Update in progress..."
+
+msgid "Update completed!"
+msgstr "Update completed!"
+
+msgid "Update launched in background. Monitoring starts automatically."
+msgstr "Update launched in background. Monitoring starts automatically."
+
+msgid "Update already in progress..."
+msgstr "Update already in progress..."
+
+msgid "Snort - Alerts and Logs"
+msgstr "Snort - Alerts and Logs"
+
+msgid "Recent alerts (50 most recent)"
+msgstr "Recent alerts (50 most recent)"
+
+msgid "Refresh"
+msgstr "Refresh"
+
+msgid "Snort system logs (20 most recent)"
+msgstr "Snort system logs (20 most recent)"
+
+msgid "No logs"
+msgstr "No logs"
+
+msgid "Actions"
+msgstr "Actions"
+
+msgid "View detailed reports via SSH with the command:"
+msgstr "View detailed reports via SSH with the command:"
+
+msgid "Log files:"
+msgstr "Log files:"
+
+msgid "Fast alerts"
+msgstr "Fast alerts"
+
+msgid "Detailed JSON alerts"
+msgstr "Detailed JSON alerts"
+
+msgid "Controls"
+msgstr "Controls"
+
+msgid "Quick actions"
+msgstr "Quick actions"
+
+msgid "Start"
+msgstr "Start"
+
+msgid "Stop"
+msgstr "Stop"
+
+msgid "Restart"
+msgstr "Restart"
+
+msgid "Enable at boot"
+msgstr "Enable at boot"
+
+msgid "Disable at boot"
+msgstr "Disable at boot"
+
+msgid "Running"
+msgstr "Running"
+
+msgid "Stopped"
+msgstr "Stopped"
+
+msgid "Loading..."
+msgstr "Loading..."
+
+msgid "Error"
+msgstr "Error"
+
+msgid "Snort memory"
+msgstr "Snort memory"
+
+msgid "System memory"
+msgstr "System memory"
+
+msgid "Total alerts"
+msgstr "Total alerts"
+
+msgid "Interface"
+msgstr "Interface"
+
+msgid "Mode"
+msgstr "Mode"
+
+msgid "Detected alerts"
+msgstr "Detected alerts"
+
+msgid "View all alerts"
+msgstr "View all alerts"
+
+msgid "No recent alerts - Your network is secure"
+msgstr "No recent alerts - Your network is secure"
+
+msgid "No alerts recorded"
+msgstr "No alerts recorded"
+
+msgid "See alerts"
+msgstr "See alerts"
+
+msgid "Full configuration"
+msgstr "Full configuration"
+
+msgid "Active symbolic link"
+msgstr "Active symbolic link"
+
+msgid "Rules are in"
+msgstr "Rules are in"
+
+msgid "No rules directory found"
+msgstr "No rules directory found"
+
+msgid "Rule files:"
+msgstr "Rule files:"
+
+msgid "Create symbolic link"
+msgstr "Create symbolic link"
+
+msgid "Symbolic link created successfully!"
+msgstr "Symbolic link created successfully!"
+
+msgid "Error creating symbolic link"
+msgstr "Error creating symbolic link"
+
+msgid "Temporary files cleaned"
+msgstr "Temporary files cleaned"
+
+msgid "Snort started"
+msgstr "Snort started"
+
+msgid "Snort stopped"
+msgstr "Snort stopped"
+
+msgid "Snort restarted"
+msgstr "Snort restarted"
+
+msgid "Auto-start enabled"
+msgstr "Auto-start enabled"
+
+msgid "Auto-start disabled"
+msgstr "Auto-start disabled"
