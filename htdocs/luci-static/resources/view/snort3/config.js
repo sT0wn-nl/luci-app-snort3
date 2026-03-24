@@ -391,6 +391,9 @@ return view.extend({
 			});
 		};
 
+		var self = this;
+		self._map = m;
+
 		return m.render().then(function(formEl) {
 			/* Start polling for status updates */
 			poll.add(function() {
@@ -401,7 +404,16 @@ return view.extend({
 		});
 	},
 
-	handleSave: null,
+	handleSaveApply: function(ev, mode) {
+		return this._map.save().then(function() {
+			return ui.changes.apply(mode == '0');
+		});
+	},
+
+	handleSave: function(ev) {
+		return this._map.save();
+	},
+
 	handleReset: null
 });
 
