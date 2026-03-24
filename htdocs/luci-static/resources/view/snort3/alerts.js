@@ -36,6 +36,65 @@ function parseAlertLine(line) {
 	}
 }
 
+function buildDetailRow(a, color) {
+	var details = [];
+
+	if (a.gid || a.sid) {
+		details.push(E('div', { 'style': 'margin-bottom:6px' }, [
+			E('strong', {}, 'SID: '),
+			E('code', {}, (a.gid || '1') + ':' + (a.sid || '-') + ':' + (a.rev || '0')),
+			' ',
+			a.sid ? E('a', {
+				'href': 'https://snort.org/rule_docs/' + (a.gid || '1') + '-' + a.sid,
+				'target': '_blank',
+				'style': 'margin-left:8px'
+			}, _('View rule on snort.org') + ' \u2197') : ''
+		]));
+	}
+
+	var fields = [
+		['pkt_num', _('Packet number')],
+		['pkt_len', _('Packet length')],
+		['pkt_gen', _('Generator')],
+		['dir', _('Direction')]
+	];
+
+	var infoItems = [];
+	fields.forEach(function(f) {
+		if (a[f[0]] !== undefined) {
+			infoItems.push(E('span', { 'style': 'margin-right:16px' }, [
+				E('strong', {}, f[1] + ': '),
+				E('code', {}, String(a[f[0]]))
+			]));
+		}
+	});
+
+	if (infoItems.length > 0) {
+		details.push(E('div', { 'style': 'margin-bottom:6px' }, infoItems));
+	}
+
+	details.push(E('div', { 'style': 'margin-bottom:4px' }, [
+		E('strong', {}, _('Source') + ': '),
+		E('code', {}, a.src_addr + (a.src_port ? ':' + a.src_port : '')),
+		E('strong', { 'style': 'margin-left:16px' }, _('Destination') + ': '),
+		E('code', {}, a.dst_addr + (a.dst_port ? ':' + a.dst_port : ''))
+	]));
+
+	details.push(E('div', {}, [
+		E('strong', {}, _('Message') + ': '),
+		E('span', { 'style': 'color:' + color }, a.msg || '-')
+	]));
+
+	return E('tr', {
+		'class': 'tr alert-detail-row',
+		'style': 'display:none'
+	}, [
+		E('td', { 'class': 'td', 'colspan': '7',
+			'style': 'padding:12px 16px;border-left:4px solid ' + color + ';font-size:0.9em'
+		}, details)
+	]);
+}
+
 function renderAlertTable(text, totalLines) {
 	var lines = (text || '').split('\n').filter(function(l) { return l.trim() !== ''; });
 
@@ -44,11 +103,7 @@ function renderAlertTable(text, totalLines) {
 			_('No alerts recorded'));
 	}
 
-	/* The backend returns the last N lines reversed (newest first).
-	   We need to map display index back to file line numbers for deletion.
-	   Line 0 in display = line totalLines in file, line 1 = totalLines-1, etc. */
 	var displayed = lines.length;
-	var startLine = totalLines - displayed + 1; /* 1-based line number of oldest displayed */
 
 	var selectAll = E('input', {
 		'type': 'checkbox',
@@ -75,8 +130,6 @@ function renderAlertTable(text, totalLines) {
 	var rows = [headerRow];
 
 	lines.forEach(function(line, idx) {
-		/* Reversed: display index 0 = newest = file line totalLines,
-		   display index 1 = file line totalLines-1, etc. */
 		var fileLine = totalLines - idx;
 		var a = parseAlertLine(line);
 
@@ -84,14 +137,29 @@ function renderAlertTable(text, totalLines) {
 			var color = actionColors[a.action] || '#6c757d';
 			var src = a.src_addr + (a.src_port ? ':' + a.src_port : '');
 			var dst = a.dst_addr + (a.dst_port ? ':' + a.dst_port : '');
+			var detailId = 'detail-' + idx;
 
-			rows.push(E('tr', { 'class': 'tr' }, [
+			var mainRow = E('tr', {
+				'class': 'tr',
+				'style': 'cursor:pointer',
+				'data-detail': detailId,
+				'click': function(ev) {
+					if (ev.target.type === 'checkbox') return;
+					var detail = document.getElementById(this.getAttribute('data-detail'));
+					if (detail) {
+						detail.style.display = detail.style.display === 'none' ? '' : 'none';
+					}
+				}
+			}, [
 				E('td', { 'class': 'td' },
 					E('input', {
 						'type': 'checkbox',
 						'class': 'alert-checkbox',
 						'data-line': String(fileLine),
-						'click': updateDeleteBtn
+						'click': function(ev) {
+							ev.stopPropagation();
+							updateDeleteBtn();
+						}
 					})),
 				E('td', { 'class': 'td', 'style': 'white-space:nowrap;font-size:0.85em' },
 					a.timestamp || '-'),
@@ -102,8 +170,15 @@ function renderAlertTable(text, totalLines) {
 				E('td', { 'class': 'td' }, a.proto || '-'),
 				E('td', { 'class': 'td', 'style': 'font-family:monospace;font-size:0.85em' }, src),
 				E('td', { 'class': 'td', 'style': 'font-family:monospace;font-size:0.85em' }, dst),
-				E('td', { 'class': 'td', 'style': 'font-weight:bold;color:' + color }, a.msg || '-')
-			]));
+				E('td', { 'class': 'td', 'style': 'font-weight:bold;color:' + color },
+					[a.msg || '-', ' ', E('span', { 'style': 'opacity:0.4;font-weight:normal;font-size:0.8em' }, '\u25BC')])
+			]);
+
+			var detailRow = buildDetailRow(a, color);
+			detailRow.id = detailId;
+
+			rows.push(mainRow);
+			rows.push(detailRow);
 		} else {
 			rows.push(E('tr', { 'class': 'tr' }, [
 				E('td', { 'class': 'td' },
@@ -111,7 +186,10 @@ function renderAlertTable(text, totalLines) {
 						'type': 'checkbox',
 						'class': 'alert-checkbox',
 						'data-line': String(fileLine),
-						'click': updateDeleteBtn
+						'click': function(ev) {
+							ev.stopPropagation();
+							updateDeleteBtn();
+						}
 					})),
 				E('td', { 'class': 'td', 'colspan': '6' }, line)
 			]));
@@ -224,9 +302,11 @@ return view.extend({
 						}
 					}, _('Clear all'))
 				]),
+				E('div', { 'style': 'opacity:0.6;font-size:0.85em;margin-bottom:10px' },
+					_('Click on a row to expand alert details and view rule documentation.')),
 				E('div', {
 					'id': 'alerts-box',
-					'style': 'max-height:500px;overflow-y:auto'
+					'style': 'max-height:600px;overflow-y:auto'
 				}, renderAlertTable(alerts, totalLines))
 			]),
 
