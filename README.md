@@ -30,7 +30,7 @@ This is a modern JavaScript-based LuCI application that provides a full web GUI 
 SSH into your router and run:
 
 ```sh
-wget -O /tmp/install.sh https://raw.githubusercontent.com/warringaa/luci-app-snort3/main/install.sh
+wget -O /tmp/install.sh https://raw.githubusercontent.com/sT0wn-nl/luci-app-snort3/main/install.sh
 sh /tmp/install.sh
 ```
 
@@ -82,7 +82,7 @@ make package/luci-app-snort3/compile
 ## Uninstall
 
 ```sh
-wget -O /tmp/uninstall.sh https://raw.githubusercontent.com/warringaa/luci-app-snort3/main/uninstall.sh
+wget -O /tmp/uninstall.sh https://raw.githubusercontent.com/sT0wn-nl/luci-app-snort3/main/uninstall.sh
 sh /tmp/uninstall.sh
 ```
 

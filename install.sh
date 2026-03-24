@@ -6,7 +6,7 @@
 #
 # Manual installation script for OpenWrt 25.x (JavaScript-based LuCI)
 # Download and execute:
-#   wget -O install.sh https://raw.githubusercontent.com/dddavid51/luci-snort3-openwrt/main/openwrt25/install.sh && sh install.sh
+#   wget -O install.sh https://raw.githubusercontent.com/sT0wn-nl/luci-app-snort3/main/install.sh && sh install.sh
 
 set -e
 
@@ -44,7 +44,7 @@ echo "OpenWrt version: ${OPENWRT_VERSION}"
 echo ""
 
 # Determine base URL for downloading files
-REPO_BASE="https://raw.githubusercontent.com/dddavid51/luci-snort3-openwrt/main/openwrt25"
+REPO_BASE="https://raw.githubusercontent.com/sT0wn-nl/luci-app-snort3/main"
 
 echo "Installing rpcd backend..."
 mkdir -p /usr/libexec/rpcd
