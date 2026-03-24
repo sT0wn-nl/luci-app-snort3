@@ -125,6 +125,11 @@ function renderStatusSection(status, rulesInfo, recentAlerts) {
 	var alertText = recentAlerts && recentAlerts.alerts ? recentAlerts.alerts : '';
 	var alertLines = alertText ? alertText.split('\n').filter(function(l) { return l.trim() !== ''; }) : [];
 
+	var actionColors = {
+		'allow': '#17a2b8', 'alert': '#ffc107', 'drop': '#dc3545',
+		'block': '#dc3545', 'reject': '#dc3545', 'log': '#6c757d'
+	};
+
 	var alertItems = [];
 	if (alertLines.length === 0) {
 		alertItems.push(E('div', {
@@ -132,9 +137,23 @@ function renderStatusSection(status, rulesInfo, recentAlerts) {
 		}, '\u2713 ' + _('No recent alerts - Your network is secure')));
 	} else {
 		alertLines.forEach(function(line) {
-			alertItems.push(E('div', {
-				'style': 'padding:8px;margin:5px 0;border-left:3px solid #dc3545;border-radius:3px'
-			}, E('div', { 'style': 'color:#dc3545;font-weight:bold;margin:5px 0' }, line)));
+			try {
+				var a = JSON.parse(line);
+				var color = actionColors[a.action] || '#6c757d';
+				var addr = a.src_addr + (a.src_port ? ':' + a.src_port : '') +
+					' \u2192 ' + a.dst_addr + (a.dst_port ? ':' + a.dst_port : '');
+				alertItems.push(E('div', {
+					'style': 'padding:6px;margin:4px 0;border-left:3px solid ' + color + ';border-radius:3px;font-size:0.85em'
+				}, [
+					E('strong', { 'style': 'color:' + color }, a.msg || 'Unknown'),
+					E('div', { 'style': 'opacity:0.7;font-size:0.9em' },
+						a.timestamp + ' | ' + a.proto + ' | ' + addr)
+				]));
+			} catch(e) {
+				alertItems.push(E('div', {
+					'style': 'padding:6px;margin:4px 0;border-left:3px solid #dc3545;border-radius:3px'
+				}, E('div', { 'style': 'color:#dc3545;font-weight:bold' }, line)));
+			}
 		});
 	}
 
