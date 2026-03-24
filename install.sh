@@ -88,9 +88,15 @@ else
 	echo "UCI config already exists, skipping"
 fi
 
-# Ensure local.lua exists (required when using manual mode with --tweaks local)
+# Ensure local.lua exists with DAQ config (required for manual mode with --tweaks local)
 if [ -d /etc/snort ] && [ ! -f /etc/snort/local.lua ]; then
-	echo "-- Local Snort3 configuration overrides" > /etc/snort/local.lua
+	cat > /etc/snort/local.lua << 'LOCALEOF'
+-- Local Snort3 configuration overrides
+-- DAQ module path (required for manual mode)
+daq = {
+    module_dirs = { '/usr/lib/daq' }
+}
+LOCALEOF
 	printf "${GREEN}Created /etc/snort/local.lua${NC}\n"
 fi
 

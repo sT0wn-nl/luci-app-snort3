@@ -145,10 +145,15 @@ snort-mgr setup
 /etc/init.d/snort restart
 ```
 
-If you prefer manual mode, ensure `/etc/snort/local.lua` exists:
+If you prefer manual mode, create `/etc/snort/local.lua` with the DAQ module path:
 
 ```sh
-echo '-- Local Snort3 configuration overrides' > /etc/snort/local.lua
+cat > /etc/snort/local.lua << 'EOF'
+daq = {
+    module_dirs = { '/usr/lib/daq' }
+}
+EOF
+/etc/init.d/snort restart
 ```
 
 The install script defaults to non-manual mode and runs `snort-mgr setup` automatically.
