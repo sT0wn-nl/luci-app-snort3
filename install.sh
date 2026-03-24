@@ -70,7 +70,7 @@ if [ ! -f /etc/config/snort ]; then
 	touch /etc/config/snort
 	uci set snort.snort=snort
 	uci set snort.snort.enabled='0'
-	uci set snort.snort.manual='1'
+	uci set snort.snort.manual='0'
 	uci set snort.snort.interface='br-lan'
 	uci set snort.snort.home_net='192.168.1.0/24'
 	uci set snort.snort.external_net='any'
@@ -88,22 +88,19 @@ else
 	echo "UCI config already exists, skipping"
 fi
 
-# Ensure local.lua exists (required by snort.lua config)
-if [ ! -f /etc/snort/local.lua ]; then
+# Ensure local.lua exists (required when using manual mode with --tweaks local)
+if [ -d /etc/snort ] && [ ! -f /etc/snort/local.lua ]; then
 	echo "-- Local Snort3 configuration overrides" > /etc/snort/local.lua
 	printf "${GREEN}Created /etc/snort/local.lua${NC}\n"
 fi
 
-# Check and install DAQ module for configured method
-DAQ_METHOD=$(uci -q get snort.snort.method || echo "pcap")
-DAQ_PKG="snort3-daq-${DAQ_METHOD}"
-if ! apk info -e "${DAQ_PKG}" >/dev/null 2>&1; then
-	echo "Installing required DAQ module: ${DAQ_PKG}..."
-	apk add "${DAQ_PKG}" 2>/dev/null && \
-		printf "${GREEN}${DAQ_PKG} installed${NC}\n" || \
-		printf "${YELLOW}WARNING: Could not install ${DAQ_PKG}. Install it manually: apk add ${DAQ_PKG}${NC}\n"
-else
-	echo "DAQ module ${DAQ_PKG} already installed"
+# Run snort-mgr setup for non-manual mode
+MANUAL=$(uci -q get snort.snort.manual || echo "0")
+if [ "$MANUAL" = "0" ] && command -v snort-mgr >/dev/null 2>&1; then
+	echo "Running snort-mgr setup..."
+	snort-mgr setup >/dev/null 2>&1 && \
+		printf "${GREEN}snort-mgr setup completed${NC}\n" || \
+		printf "${YELLOW}WARNING: snort-mgr setup failed. Check with 'snort-mgr check'${NC}\n"
 fi
 
 # Setup rules symlink
