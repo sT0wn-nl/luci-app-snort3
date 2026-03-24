@@ -127,9 +127,11 @@ service_action() {
 get_alerts() {
 	local alerts=""
 	local logs=""
+	local total_lines=0
 	local alert_file=$(get_alert_file)
 
 	if [ -n "$alert_file" ]; then
+		total_lines=$(wc -l < "$alert_file")
 		alerts=$(tail -50 "$alert_file" | tac 2>/dev/null || tail -50 "$alert_file")
 	fi
 
@@ -138,6 +140,7 @@ get_alerts() {
 	json_init
 	json_add_string "alerts" "$alerts"
 	json_add_string "logs" "$logs"
+	json_add_int "total_lines" "$total_lines"
 	json_dump
 }
 
@@ -306,6 +309,51 @@ clear_alerts() {
 	json_dump
 }
 
+delete_alerts() {
+	local lines_str
+	read -r input
+	json_load "$input"
+	json_get_var lines_str "lines"
+
+	local alert_file=$(get_alert_file)
+	local success=0
+	local message=""
+
+	if [ -n "$alert_file" ] && [ -f "$alert_file" ] && [ -n "$lines_str" ]; then
+		# lines_str is comma-separated line numbers (1-based)
+		# Build sed delete expression
+		local sed_expr=""
+		local IFS=","
+		for ln in $lines_str; do
+			# Validate it's a number
+			case "$ln" in
+				''|*[!0-9]*) continue ;;
+			esac
+			if [ -z "$sed_expr" ]; then
+				sed_expr="${ln}d"
+			else
+				sed_expr="${sed_expr};${ln}d"
+			fi
+		done
+		unset IFS
+
+		if [ -n "$sed_expr" ]; then
+			sed -i "$sed_expr" "$alert_file"
+			success=1
+			message="Selected alerts deleted"
+		else
+			message="No valid line numbers"
+		fi
+	else
+		message="No alert file found or no lines specified"
+	fi
+
+	json_init
+	json_add_boolean "success" "$success"
+	json_add_string "message" "$message"
+	json_dump
+}
+
 case "$1" in
 	list)
 		echo '{'
@@ -319,7 +367,8 @@ case "$1" in
 		echo '  "fixRules": {},'
 		echo '  "getRulesInfo": {},'
 		echo '  "getInterfaces": {},'
-		echo '  "clearAlerts": {}'
+		echo '  "clearAlerts": {},'
+		echo '  "deleteAlerts": { "lines": "str" }'
 		echo '}'
 		;;
 	call)
@@ -335,6 +384,7 @@ case "$1" in
 			getRulesInfo) get_rules_info ;;
 			getInterfaces) get_interfaces ;;
 			clearAlerts) clear_alerts ;;
+			deleteAlerts) delete_alerts ;;
 		esac
 		;;
 esac

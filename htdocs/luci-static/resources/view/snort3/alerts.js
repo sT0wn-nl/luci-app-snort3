@@ -13,6 +13,12 @@ var callClearAlerts = rpc.declare({
 	method: 'clearAlerts'
 });
 
+var callDeleteAlerts = rpc.declare({
+	object: 'luci.snort3',
+	method: 'deleteAlerts',
+	params: ['lines']
+});
+
 var actionColors = {
 	'allow': '#17a2b8',
 	'alert': '#ffc107',
@@ -30,7 +36,7 @@ function parseAlertLine(line) {
 	}
 }
 
-function renderAlertTable(text) {
+function renderAlertTable(text, totalLines) {
 	var lines = (text || '').split('\n').filter(function(l) { return l.trim() !== ''; });
 
 	if (lines.length === 0) {
@@ -38,7 +44,26 @@ function renderAlertTable(text) {
 			_('No alerts recorded'));
 	}
 
+	/* The backend returns the last N lines reversed (newest first).
+	   We need to map display index back to file line numbers for deletion.
+	   Line 0 in display = line totalLines in file, line 1 = totalLines-1, etc. */
+	var displayed = lines.length;
+	var startLine = totalLines - displayed + 1; /* 1-based line number of oldest displayed */
+
+	var selectAll = E('input', {
+		'type': 'checkbox',
+		'id': 'select-all',
+		'click': function(ev) {
+			var boxes = document.querySelectorAll('.alert-checkbox');
+			for (var i = 0; i < boxes.length; i++) {
+				boxes[i].checked = ev.target.checked;
+			}
+			updateDeleteBtn();
+		}
+	});
+
 	var headerRow = E('tr', { 'class': 'tr table-titles' }, [
+		E('th', { 'class': 'th', 'style': 'width:30px' }, selectAll),
 		E('th', { 'class': 'th' }, _('Time')),
 		E('th', { 'class': 'th' }, _('Action')),
 		E('th', { 'class': 'th' }, _('Protocol')),
@@ -49,14 +74,25 @@ function renderAlertTable(text) {
 
 	var rows = [headerRow];
 
-	lines.forEach(function(line) {
+	lines.forEach(function(line, idx) {
+		/* Reversed: display index 0 = newest = file line totalLines,
+		   display index 1 = file line totalLines-1, etc. */
+		var fileLine = totalLines - idx;
 		var a = parseAlertLine(line);
+
 		if (a) {
 			var color = actionColors[a.action] || '#6c757d';
 			var src = a.src_addr + (a.src_port ? ':' + a.src_port : '');
 			var dst = a.dst_addr + (a.dst_port ? ':' + a.dst_port : '');
 
 			rows.push(E('tr', { 'class': 'tr' }, [
+				E('td', { 'class': 'td' },
+					E('input', {
+						'type': 'checkbox',
+						'class': 'alert-checkbox',
+						'data-line': String(fileLine),
+						'click': updateDeleteBtn
+					})),
 				E('td', { 'class': 'td', 'style': 'white-space:nowrap;font-size:0.85em' },
 					a.timestamp || '-'),
 				E('td', { 'class': 'td' },
@@ -70,12 +106,38 @@ function renderAlertTable(text) {
 			]));
 		} else {
 			rows.push(E('tr', { 'class': 'tr' }, [
+				E('td', { 'class': 'td' },
+					E('input', {
+						'type': 'checkbox',
+						'class': 'alert-checkbox',
+						'data-line': String(fileLine),
+						'click': updateDeleteBtn
+					})),
 				E('td', { 'class': 'td', 'colspan': '6' }, line)
 			]));
 		}
 	});
 
 	return E('table', { 'class': 'table', 'id': 'alerts-table' }, rows);
+}
+
+function updateDeleteBtn() {
+	var btn = document.getElementById('delete-selected-btn');
+	if (!btn) return;
+	var checked = document.querySelectorAll('.alert-checkbox:checked');
+	btn.disabled = checked.length === 0;
+	btn.textContent = checked.length > 0
+		? _('Delete selected') + ' (' + checked.length + ')'
+		: _('Delete selected');
+}
+
+function getSelectedLines() {
+	var checked = document.querySelectorAll('.alert-checkbox:checked');
+	var lines = [];
+	for (var i = 0; i < checked.length; i++) {
+		lines.push(checked[i].getAttribute('data-line'));
+	}
+	return lines.join(',');
 }
 
 function renderLogLines(text) {
@@ -96,13 +158,14 @@ function refreshAlerts() {
 		var box = document.getElementById('alerts-box');
 		if (box) {
 			box.innerHTML = '';
-			box.appendChild(renderAlertTable(data ? data.alerts : ''));
+			box.appendChild(renderAlertTable(data ? data.alerts : '', data ? data.total_lines : 0));
 		}
 		var logBox = document.getElementById('logs-box');
 		if (logBox) {
 			logBox.innerHTML = '';
 			logBox.appendChild(renderLogLines(data ? data.logs : ''));
 		}
+		updateDeleteBtn();
 	});
 }
 
@@ -114,6 +177,7 @@ return view.extend({
 	render: function(data) {
 		var alerts = data ? data.alerts : '';
 		var logs = data ? data.logs : '';
+		var totalLines = data ? data.total_lines : 0;
 
 		var view = E('div', {}, [
 			E('h2', {}, _('Snort IDS/IPS - Alerts')),
@@ -126,6 +190,24 @@ return view.extend({
 						'style': 'margin-right:10px',
 						'click': refreshAlerts
 					}, _('Refresh')),
+					E('button', {
+						'id': 'delete-selected-btn',
+						'class': 'cbi-button cbi-button-remove',
+						'style': 'margin-right:10px',
+						'disabled': true,
+						'click': function() {
+							var lines = getSelectedLines();
+							if (!lines) return;
+							return callDeleteAlerts(lines).then(function(result) {
+								if (result && result.success) {
+									ui.addNotification(null, E('p', {}, _('Selected alerts deleted')), 'info');
+									refreshAlerts();
+								} else {
+									ui.addNotification(null, E('p', {}, result ? result.message : _('Error')), 'danger');
+								}
+							});
+						}
+					}, _('Delete selected')),
 					E('button', {
 						'class': 'cbi-button cbi-button-remove',
 						'click': function() {
@@ -140,12 +222,12 @@ return view.extend({
 								}
 							});
 						}
-					}, _('Clear all alerts'))
+					}, _('Clear all'))
 				]),
 				E('div', {
 					'id': 'alerts-box',
 					'style': 'max-height:500px;overflow-y:auto'
-				}, renderAlertTable(alerts))
+				}, renderAlertTable(alerts, totalLines))
 			]),
 
 			E('div', { 'class': 'cbi-section' }, [

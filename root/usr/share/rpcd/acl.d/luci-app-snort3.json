@@ -25,7 +25,8 @@
 					"updateRules",
 					"cleanupTemp",
 					"fixRules",
-					"clearAlerts"
+					"clearAlerts",
+					"deleteAlerts"
 				]
 			}
 		}
