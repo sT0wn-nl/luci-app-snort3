@@ -84,7 +84,7 @@ return view.extend({
 			E('div', { 'class': 'cbi-section' }, [
 				E('h3', {}, _('Service Status')),
 				E('div', {
-					'style': 'background:#f9f9f9;padding:15px;border-radius:5px;border:1px solid #ddd'
+					'class': 'cbi-value'
 				}, E('table', { 'class': 'table', 'style': 'width:100%' }, tableRows))
 			]),
 

@@ -12,7 +12,7 @@ var callGetAlerts = rpc.declare({
 function renderAlertLines(text, className) {
 	var lines = (text || '').split('\n').filter(function(l) { return l.trim() !== ''; });
 	if (lines.length === 0) {
-		return E('div', { 'style': 'text-align:center;color:#999;padding:20px' },
+		return E('div', { 'style': 'text-align:center;opacity:0.5;padding:20px' },
 			_('No alerts recorded'));
 	}
 	return E('div', {}, lines.map(function(line) {
@@ -39,7 +39,7 @@ return view.extend({
 				E('h3', {}, _('Recent alerts (50 most recent)')),
 				E('div', {
 					'id': 'alerts-box',
-					'style': 'background:#f8f9fa;border-left:4px solid #dc3545;padding:15px;margin:15px 0;border-radius:4px;font-family:monospace;font-size:0.9em;max-height:500px;overflow-y:auto'
+					'style': 'border-left:4px solid #dc3545;padding:15px;margin:15px 0;border-radius:4px;font-family:monospace;font-size:0.9em;max-height:500px;overflow-y:auto'
 				}, renderAlertLines(alerts, 'alert-line')),
 				E('div', { 'style': 'text-align:right;margin-top:10px' }, [
 					E('button', {
@@ -66,7 +66,7 @@ return view.extend({
 				E('h3', {}, _('Snort system logs (20 most recent)')),
 				E('div', {
 					'id': 'logs-box',
-					'style': 'background:#f0f0f0;border-left:4px solid #007bff;padding:15px;margin:15px 0;border-radius:4px;font-family:monospace;font-size:0.9em;max-height:400px;overflow-y:auto'
+					'style': 'border-left:4px solid #007bff;padding:15px;margin:15px 0;border-radius:4px;font-family:monospace;font-size:0.9em;max-height:400px;overflow-y:auto'
 				}, renderAlertLines(logs, 'log-line'))
 			]),
 
@@ -75,7 +75,7 @@ return view.extend({
 				E('div', { 'style': 'padding:10px' }, [
 					E('p', {}, _('View detailed reports via SSH with the command:')),
 					E('pre', {
-						'style': 'background:#f0f0f0;padding:10px;border-radius:4px'
+						'style': 'padding:10px;border-radius:4px'
 					}, 'snort-mgr report -v (requires coreutils-sort package)'),
 					E('p', { 'style': 'margin-top:15px' }, _('Log files:')),
 					E('ul', {}, [

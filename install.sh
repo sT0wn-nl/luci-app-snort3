@@ -23,13 +23,13 @@ NC='\033[0m'
 
 # Check root privileges
 if [ "$(id -u)" -ne 0 ]; then
-	echo "${RED}ERROR: This script must be run as root${NC}"
+	printf "${RED}ERROR: This script must be run as root${NC}\n"
 	exit 1
 fi
 
 # Check Snort installation
 if ! command -v snort >/dev/null 2>&1; then
-	echo "${RED}ERROR: Snort3 is not installed${NC}"
+	printf "${RED}ERROR: Snort3 is not installed${NC}\n"
 	echo "Please install Snort3 first:"
 	echo "  apk add snort3"
 	exit 1
@@ -83,7 +83,7 @@ if [ ! -f /etc/config/snort ]; then
 	uci set snort.snort.temp_dir='/var/snort.d'
 	uci set snort.snort.action='default'
 	uci commit snort
-	echo "${GREEN}UCI config created${NC}"
+	printf "${GREEN}UCI config created${NC}\n"
 else
 	echo "UCI config already exists, skipping"
 fi
@@ -97,7 +97,7 @@ if [ -d /var/snort.d/rules ]; then
 		rm /etc/snort/rules
 	fi
 	ln -sf /var/snort.d/rules /etc/snort/rules
-	echo "${GREEN}Rules symlink created${NC}"
+	printf "${GREEN}Rules symlink created${NC}\n"
 fi
 
 echo ""
@@ -105,9 +105,9 @@ echo "Restarting rpcd..."
 /etc/init.d/rpcd restart
 
 echo ""
-echo "${GREEN}================================================${NC}"
-echo "${GREEN}Installation completed!${NC}"
-echo "${GREEN}================================================${NC}"
+printf "${GREEN}================================================${NC}\n"
+printf "${GREEN}Installation completed!${NC}\n"
+printf "${GREEN}================================================${NC}\n"
 echo ""
 echo "Access the Snort3 interface at:"
 echo "  Services > Snort IDS/IPS"

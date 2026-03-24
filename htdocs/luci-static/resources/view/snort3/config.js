@@ -133,8 +133,8 @@ function renderStatusSection(status, rulesInfo, recentAlerts) {
 	} else {
 		alertLines.forEach(function(line) {
 			alertItems.push(E('div', {
-				'style': 'padding:8px;margin:5px 0;background:white;border-left:3px solid #dc3545;border-radius:3px'
-			}, E('div', { 'style': 'color:#d32f2f;font-weight:bold;margin:5px 0' }, line)));
+				'style': 'padding:8px;margin:5px 0;border-left:3px solid #dc3545;border-radius:3px'
+			}, E('div', { 'style': 'color:#dc3545;font-weight:bold;margin:5px 0' }, line)));
 		});
 	}
 
@@ -153,7 +153,7 @@ function renderStatusSection(status, rulesInfo, recentAlerts) {
 		]),
 		E('div', {
 			'id': 'recent-alerts-box',
-			'style': 'background:#f8f9fa;border-left:4px solid #dc3545;padding:15px;margin:10px 0;border-radius:5px;font-family:monospace;font-size:0.85em;max-height:300px;overflow-y:auto'
+			'style': 'border-left:4px solid #dc3545;padding:15px;margin:10px 0;border-radius:5px;font-family:monospace;font-size:0.85em;max-height:300px;overflow-y:auto'
 		}, alertItems)
 	]);
 
@@ -330,11 +330,11 @@ return view.extend({
 		o.cfgvalue = function() {
 			if (rulesInfo && rulesInfo.symlink_active) {
 				return '<span style="color:green">\u2713 ' + _('Active symbolic link') + ': /etc/snort/rules \u2192 ' + rulesInfo.symlink_target + '</span>' +
-					(rulesInfo.rule_count > 0 ? '<br><span style="color:#666">' + _('Rule files:') + ' ' + rulesInfo.rule_count + '</span>' : '');
+					(rulesInfo.rule_count > 0 ? '<br><span style="opacity:0.7">' + _('Rule files:') + ' ' + rulesInfo.rule_count + '</span>' : '');
 			} else if (rulesInfo && rulesInfo.rules_in_temp) {
 				return '<span style="color:orange">\u26A0 ' + _('Rules are in') + ' /var/snort.d/rules</span>';
 			} else {
-				return '<span style="color:#999">' + _('No rules directory found') + '</span>';
+				return '<span style="opacity:0.5">' + _('No rules directory found') + '</span>';
 			}
 		};
 
