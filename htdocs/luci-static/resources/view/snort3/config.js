@@ -3,6 +3,7 @@
 'require form';
 'require rpc';
 'require ui';
+'require uci';
 
 var callGetRulesInfo = rpc.declare({
 	object: 'luci.snort3',
@@ -83,18 +84,38 @@ return view.extend({
 		o.placeholder = 'any';
 		o.default = 'any';
 
-		o = s.option(form.ListValue, 'mode', _('Operating mode'),
+		var modeOpt = s.option(form.ListValue, 'mode', _('Operating mode'),
 			_('IDS = Detection only, IPS = Active prevention'));
-		o.value('ids', 'IDS (' + _('Detection') + ')');
-		o.value('ips', 'IPS (' + _('Prevention') + ')');
-		o.default = 'ids';
+		modeOpt.value('ids', 'IDS (' + _('Detection') + ')');
+		modeOpt.value('ips', 'IPS (' + _('Prevention') + ')');
+		modeOpt.default = 'ids';
+		modeOpt.write = function(section_id, value) {
+			uci.set('snort', section_id, 'mode', value);
+			if (value === 'ips') {
+				uci.set('snort', section_id, 'method', 'nfq');
+			}
+		};
 
-		o = s.option(form.ListValue, 'method', _('DAQ method'),
+		o = s.option(form.DummyValue, '_ips_warning');
+		o.rawhtml = true;
+		o.default = '<div style="padding:8px 12px;border-left:4px solid #ffc107;border-radius:3px;margin:4px 0">' +
+			'<strong style="color:#ffc107">\u26A0 ' + _('IPS mode warning') + ':</strong> ' +
+			_('IPS mode routes all traffic through Snort using NFQ. If Snort crashes, network connectivity may be lost. Keep SSH access available.') +
+			'</div>';
+		o.depends('mode', 'ips');
+
+		var methodOpt = s.option(form.ListValue, 'method', _('DAQ method'),
 			_('Packet acquisition method'));
-		o.value('pcap', 'PCAP');
-		o.value('afpacket', 'AF_PACKET');
-		o.value('nfq', 'NFQ (' + _('for IPS') + ')');
-		o.default = 'pcap';
+		methodOpt.value('pcap', 'PCAP');
+		methodOpt.value('afpacket', 'AF_PACKET');
+		methodOpt.value('nfq', 'NFQ');
+		methodOpt.default = 'pcap';
+		methodOpt.depends('mode', 'ids');
+
+		o = s.option(form.DummyValue, '_ips_method');
+		o.rawhtml = true;
+		o.default = '<em>' + _('DAQ method is automatically set to NFQ in IPS mode') + '</em>';
+		o.depends('mode', 'ips');
 
 		o = s.option(form.Value, 'snaplen', _('Capture length'),
 			_('Maximum packet capture size'));
