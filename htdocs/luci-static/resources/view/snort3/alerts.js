@@ -80,12 +80,12 @@ return view.extend({
 					E('p', { 'style': 'margin-top:15px' }, _('Log files:')),
 					E('ul', {}, [
 						E('li', {}, [
-							E('code', {}, '/var/log/alert_fast.txt'),
-							' - ' + _('Fast alerts')
+							E('code', {}, '/var/log/alert_json.txt'),
+							' - ' + _('JSON alerts (non-manual mode)')
 						]),
 						E('li', {}, [
-							E('code', {}, '/var/log/*alert_json.txt'),
-							' - ' + _('Detailed JSON alerts')
+							E('code', {}, '/var/log/alert_fast.txt'),
+							' - ' + _('Fast alerts (manual mode)')
 						])
 					])
 				])

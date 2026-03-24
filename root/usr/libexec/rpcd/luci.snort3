@@ -8,6 +8,22 @@
 LOCK_FILE="/tmp/snort_rules_update.lock"
 LOG_FILE="/tmp/snort_rules_update.log"
 
+# Detect the alert log file (non-manual mode uses alert_json.txt, manual uses alert_fast.txt)
+get_alert_file() {
+	local log_dir=$(uci -q get snort.snort.log_dir || echo "/var/log")
+	if [ -f "${log_dir}/alert_fast.txt" ]; then
+		echo "${log_dir}/alert_fast.txt"
+	elif [ -f "${log_dir}/alert_json.txt" ]; then
+		echo "${log_dir}/alert_json.txt"
+	elif [ -f "/var/log/alert_fast.txt" ]; then
+		echo "/var/log/alert_fast.txt"
+	elif [ -f "/var/log/alert_json.txt" ]; then
+		echo "/var/log/alert_json.txt"
+	else
+		echo ""
+	fi
+}
+
 get_status() {
 	local running=0
 	local pid=""
@@ -37,8 +53,9 @@ get_status() {
 		mem_percent=$((mem_used * 100 / mem_total))
 	fi
 
-	if [ -f /var/log/alert_fast.txt ]; then
-		alert_count=$(wc -l < /var/log/alert_fast.txt)
+	local alert_file=$(get_alert_file)
+	if [ -n "$alert_file" ]; then
+		alert_count=$(wc -l < "$alert_file")
 	fi
 
 	# Read UCI config
@@ -110,9 +127,10 @@ service_action() {
 get_alerts() {
 	local alerts=""
 	local logs=""
+	local alert_file=$(get_alert_file)
 
-	if [ -f /var/log/alert_fast.txt ]; then
-		alerts=$(tail -50 /var/log/alert_fast.txt | tac 2>/dev/null || tail -50 /var/log/alert_fast.txt)
+	if [ -n "$alert_file" ]; then
+		alerts=$(tail -50 "$alert_file" | tac 2>/dev/null || tail -50 "$alert_file")
 	fi
 
 	logs=$(logread 2>/dev/null | grep snort | tail -20 | tac 2>/dev/null || logread 2>/dev/null | grep snort | tail -20)
@@ -126,10 +144,11 @@ get_alerts() {
 get_recent_alerts() {
 	local alerts=""
 	local count=0
+	local alert_file=$(get_alert_file)
 
-	if [ -f /var/log/alert_fast.txt ]; then
-		alerts=$(tail -10 /var/log/alert_fast.txt | tac 2>/dev/null || tail -10 /var/log/alert_fast.txt)
-		count=$(wc -l < /var/log/alert_fast.txt)
+	if [ -n "$alert_file" ]; then
+		alerts=$(tail -10 "$alert_file" | tac 2>/dev/null || tail -10 "$alert_file")
+		count=$(wc -l < "$alert_file")
 	fi
 
 	json_init
