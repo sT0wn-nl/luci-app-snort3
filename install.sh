@@ -88,6 +88,24 @@ else
 	echo "UCI config already exists, skipping"
 fi
 
+# Ensure local.lua exists (required by snort.lua config)
+if [ ! -f /etc/snort/local.lua ]; then
+	echo "-- Local Snort3 configuration overrides" > /etc/snort/local.lua
+	printf "${GREEN}Created /etc/snort/local.lua${NC}\n"
+fi
+
+# Check and install DAQ module for configured method
+DAQ_METHOD=$(uci -q get snort.snort.method || echo "pcap")
+DAQ_PKG="snort3-daq-${DAQ_METHOD}"
+if ! apk info -e "${DAQ_PKG}" >/dev/null 2>&1; then
+	echo "Installing required DAQ module: ${DAQ_PKG}..."
+	apk add "${DAQ_PKG}" 2>/dev/null && \
+		printf "${GREEN}${DAQ_PKG} installed${NC}\n" || \
+		printf "${YELLOW}WARNING: Could not install ${DAQ_PKG}. Install it manually: apk add ${DAQ_PKG}${NC}\n"
+else
+	echo "DAQ module ${DAQ_PKG} already installed"
+fi
+
 # Setup rules symlink
 if [ -d /var/snort.d/rules ]; then
 	if [ -d /etc/snort/rules ] && [ ! -L /etc/snort/rules ]; then

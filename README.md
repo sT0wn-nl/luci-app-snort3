@@ -21,6 +21,7 @@ This is a modern JavaScript-based LuCI application that provides a full web GUI 
 
 - OpenWrt 25.12 or later
 - Snort3 installed (`apk add snort3`)
+- Snort3 DAQ module for your chosen method (`apk add snort3-daq-pcap` for PCAP, `snort3-daq-afpacket` for AF_PACKET, or `snort3-daq-nfq` for NFQ/IPS)
 - LuCI web interface (`luci-base`)
 
 ## Installation
@@ -37,8 +38,10 @@ sh /tmp/install.sh
 The script will:
 1. Install the rpcd backend, ACL, menu, and JavaScript view files
 2. Create a default UCI configuration if none exists
-3. Set up the rules symlink if applicable
-4. Restart rpcd
+3. Create `/etc/snort/local.lua` if missing (required by Snort3)
+4. Install the required DAQ module (e.g. `snort3-daq-pcap`)
+5. Set up the rules symlink if applicable
+6. Restart rpcd
 
 After installation, navigate to **Services > Snort IDS/IPS** in LuCI.
 
@@ -127,6 +130,34 @@ This app uses the modern LuCI JavaScript framework (no Lua runtime required):
 - **Config**: Standard UCI configuration (`/etc/config/snort`)
 
 This means **no `luci-compat` or `luci-lua-runtime` dependency** — the app runs entirely in the browser with minimal router overhead.
+
+## Troubleshooting
+
+### `cannot open ./local.lua: No such file or directory`
+
+Snort3's main config (`/etc/snort/snort.lua`) includes `local.lua` for local overrides. Create it if missing:
+
+```sh
+echo '-- Local Snort3 configuration overrides' > /etc/snort/local.lua
+```
+
+The install script creates this file automatically.
+
+### `Could not find requested DAQ module: pcap`
+
+The DAQ (Data Acquisition) module for your chosen packet capture method is not installed. Install the correct one:
+
+```sh
+apk add snort3-daq-pcap      # for PCAP (default)
+apk add snort3-daq-afpacket  # for AF_PACKET
+apk add snort3-daq-nfq       # for NFQ (IPS mode)
+```
+
+The install script detects your configured method and installs the matching DAQ module automatically.
+
+### Menu not visible after installation
+
+Clear your browser cache or log out and back into LuCI. You can also try a hard refresh (Ctrl+Shift+R).
 
 ## Credits
 
