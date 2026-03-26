@@ -3,7 +3,12 @@
 'require form';
 'require rpc';
 'require ui';
-'require uci';
+
+var callApplyConfig = rpc.declare({
+	object: 'luci.snort3',
+	method: 'serviceAction',
+	params: ['action']
+});
 
 var callGetRulesInfo = rpc.declare({
 	object: 'luci.snort3',
@@ -90,9 +95,12 @@ return view.extend({
 		modeOpt.value('ips', 'IPS (' + _('Prevention') + ')');
 		modeOpt.default = 'ids';
 		modeOpt.write = function(section_id, value) {
-			uci.set('snort', section_id, 'mode', value);
+			this.map.data.set('snort', section_id, 'mode', value);
 			if (value === 'ips') {
-				uci.set('snort', section_id, 'method', 'nfq');
+				this.map.data.set('snort', section_id, 'method', 'nfq');
+				this.map.data.set('snort', section_id, 'action', 'reject');
+			} else {
+				this.map.data.set('snort', section_id, 'method', 'pcap');
 			}
 		};
 
@@ -221,6 +229,12 @@ return view.extend({
 	handleSaveApply: function(ev, mode) {
 		return this._map.save().then(function() {
 			return ui.changes.apply(mode == '0');
+		}).then(function() {
+			return callApplyConfig('apply_config');
+		}).then(function(result) {
+			if (result && result.success) {
+				ui.addNotification(null, E('p', {}, _('Configuration applied and Snort restarted.')), 'info');
+			}
 		});
 	},
 

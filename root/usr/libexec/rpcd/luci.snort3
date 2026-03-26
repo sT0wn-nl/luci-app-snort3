@@ -103,6 +103,12 @@ service_action() {
 			success=1
 			message="Snort restarted"
 			;;
+		apply_config)
+			/usr/bin/snort-mgr resetup >/dev/null 2>&1
+			/etc/init.d/snort restart >/dev/null 2>&1
+			success=1
+			message="Configuration applied and Snort restarted"
+			;;
 		enable)
 			/etc/init.d/snort enable >/dev/null 2>&1
 			success=1
