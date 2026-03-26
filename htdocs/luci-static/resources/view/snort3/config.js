@@ -72,12 +72,11 @@ return view.extend({
 		o.default = '0';
 		o.rmempty = false;
 
-		o = s.option(form.MultiValue, 'interface', _('Network interface'),
-			_('Network interface(s) to monitor'));
+		o = s.option(form.ListValue, 'interface', _('Network interface'),
+			_('Network interface to monitor'));
 		ifaces.forEach(function(iface) {
 			o.value(iface, iface);
 		});
-		o.display_size = 5;
 
 		o = s.option(form.Value, 'home_net', _('Local network'),
 			_('IP address range to protect'));
