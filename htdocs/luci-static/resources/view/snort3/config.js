@@ -118,6 +118,13 @@ return view.extend({
 		methodOpt.value('nfq', 'NFQ');
 		methodOpt.default = 'pcap';
 		methodOpt.depends('mode', 'ids');
+		methodOpt.write = function(section_id, value) {
+			/* Only write when visible (IDS mode) */
+			this.map.data.set('snort', section_id, 'method', value);
+		};
+		methodOpt.remove = function() {
+			/* Prevent LuCI from removing method when field is hidden in IPS mode */
+		};
 
 		o = s.option(form.DummyValue, '_ips_method');
 		o.rawhtml = true;
