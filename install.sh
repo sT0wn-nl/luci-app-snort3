@@ -100,6 +100,12 @@ LOCALEOF
 	printf "${GREEN}Created /etc/snort/local.lua${NC}\n"
 fi
 
+# Ensure nfq chain_type is set to forward (snort-mgr only supports input by default)
+if [ "$(uci -q get snort.nfq)" = "nfq" ]; then
+	uci set snort.nfq.chain_type='forward'
+	uci commit snort
+fi
+
 # Run snort-mgr setup for non-manual mode
 MANUAL=$(uci -q get snort.snort.manual || echo "0")
 if [ "$MANUAL" = "0" ] && command -v snort-mgr >/dev/null 2>&1; then
@@ -107,6 +113,32 @@ if [ "$MANUAL" = "0" ] && command -v snort-mgr >/dev/null 2>&1; then
 	snort-mgr setup >/dev/null 2>&1 && \
 		printf "${GREEN}snort-mgr setup completed${NC}\n" || \
 		printf "${YELLOW}WARNING: snort-mgr setup failed. Check with 'snort-mgr check'${NC}\n"
+fi
+
+# Setup nft forward queue rules for IPS mode
+MODE=$(uci -q get snort.snort.mode || echo "ids")
+METHOD=$(uci -q get snort.snort.method || echo "pcap")
+if [ "$MODE" = "ips" ] && [ "$METHOD" = "nfq" ]; then
+	echo "Setting up NFQ forward chain for IPS mode..."
+	QUEUE_START=$(uci -q get snort.nfq.queue_start || echo 4)
+	QUEUE_COUNT=$(uci -q get snort.nfq.queue_count || echo 4)
+	QUEUE_END=$((QUEUE_START + QUEUE_COUNT - 1))
+	# Create nft rules
+	nft list tables 2>/dev/null | grep -q 'inet snort' && nft delete table inet snort 2>/dev/null
+	nft add table inet snort
+	nft add chain inet snort forward_ips '{ type filter hook forward priority filter; policy accept; }'
+	nft add rule inet snort forward_ips counter queue flags bypass to "${QUEUE_START}-${QUEUE_END}"
+	# Make persistent
+	mkdir -p /etc/nftables.d
+	cat > /etc/nftables.d/snort-ips.nft << NFTEOF
+table inet snort {
+    chain forward_ips {
+        type filter hook forward priority filter; policy accept;
+        counter queue flags bypass to ${QUEUE_START}-${QUEUE_END}
+    }
+}
+NFTEOF
+	printf "${GREEN}NFQ forward chain created${NC}\n"
 fi
 
 # Setup rules symlink

@@ -105,6 +105,38 @@ service_action() {
 			;;
 		apply_config)
 			/usr/bin/snort-mgr resetup >/dev/null 2>&1
+			# snort-mgr only creates nft rules for chain_type=input
+			# For IPS with forward chain, we need to create nft rules manually
+			local mode=$(uci -q get snort.snort.mode)
+			local method=$(uci -q get snort.snort.method)
+			if [ "$mode" = "ips" ] && [ "$method" = "nfq" ]; then
+				# Ensure forward chain exists for IPS
+				local queue_start=$(uci -q get snort.nfq.queue_start || echo 4)
+				local queue_count=$(uci -q get snort.nfq.queue_count || echo 4)
+				local queue_end=$((queue_start + queue_count - 1))
+				# Remove any existing snort table first (snort-mgr resetup may have partially created it)
+				nft list tables 2>/dev/null | grep -q 'inet snort' && nft delete table inet snort 2>/dev/null
+				nft add table inet snort
+				nft add chain inet snort forward_ips '{ type filter hook forward priority filter; policy accept; }'
+				nft add rule inet snort forward_ips counter queue flags bypass to "${queue_start}-${queue_end}"
+			fi
+			# Also ensure persistent nft config exists
+			if [ "$mode" = "ips" ] && [ "$method" = "nfq" ]; then
+				local queue_start=$(uci -q get snort.nfq.queue_start || echo 4)
+				local queue_count=$(uci -q get snort.nfq.queue_count || echo 4)
+				local queue_end=$((queue_start + queue_count - 1))
+				mkdir -p /etc/nftables.d
+				cat > /etc/nftables.d/snort-ips.nft << NFTEOF
+table inet snort {
+    chain forward_ips {
+        type filter hook forward priority filter; policy accept;
+        counter queue flags bypass to ${queue_start}-${queue_end}
+    }
+}
+NFTEOF
+			elif [ -f /etc/nftables.d/snort-ips.nft ]; then
+				rm -f /etc/nftables.d/snort-ips.nft
+			fi
 			/etc/init.d/snort restart >/dev/null 2>&1
 			success=1
 			message="Configuration applied and Snort restarted"
