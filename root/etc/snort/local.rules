@@ -1,0 +1,7 @@
+# Custom (local) Snort rules, managed by luci-app-snort.
+#
+# These rules are loaded in addition to the downloaded rule set when the
+# configuration mode is "Managed by LuCI".  Use SIDs >= 1000000 for your own
+# rules.  Example:
+#
+# alert icmp any any -> $HOME_NET any (msg:"LOCAL ICMP ping to home network"; itype:8; sid:1000001; rev:1;)

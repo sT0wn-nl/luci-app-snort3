@@ -1,0 +1,732 @@
+// SPDX-License-Identifier: Apache-2.0
+//
+// rpcd backend for luci-app-snort (ubus object "luci.snort").
+
+'use strict';
+
+import { access, open, popen, readfile, writefile, stat, lstat, readlink, glob, mkdir, unlink } from 'fs';
+import { cursor } from 'uci';
+import { connect } from 'ubus';
+
+const HELPER       = '/usr/libexec/luci-snort/helper';
+const JOBDIR       = '/var/run/luci-snort';
+const LUCI_INCLUDE = '/usr/share/luci-app-snort/include.uc';
+const JOBS         = [ 'update', 'update-restart', 'check' ];
+const MAX_ALERTS   = 10000;
+const STATS_LINES  = 50000;
+const MAX_RULES_SZ = 1048576;
+
+function shellquote(s) {
+	return `'${replace(s, "'", "'\\''")}'`;
+}
+
+function exec(cmd) {
+	let fd = popen(cmd, 'r');
+	if (!fd)
+		return null;
+	let out = fd.read('all');
+	fd.close();
+	return out;
+}
+
+function config() {
+	let uci = cursor();
+	let s = uci.get_all('snort', 'snort') ?? {};
+	let l = uci.get_all('snort', 'luci') ?? {};
+	let config_dir = s.config_dir ?? '/etc/snort';
+	while (length(config_dir) > 1 && substr(config_dir, -1) == '/')
+		config_dir = substr(config_dir, 0, -1);
+
+	return {
+		enabled:      s.enabled ?? '0',
+		manual:       s.manual ?? '1',
+		mode:         s.mode ?? 'ids',
+		method:       s.method ?? 'pcap',
+		action:       s.action ?? 'default',
+		iface:        s.interface ?? '',
+		home_net:     s.home_net ?? '',
+		config_dir:   config_dir,
+		temp_dir:     s.temp_dir ?? '/var/snort.d',
+		log_dir:      s.log_dir ?? '/var/log',
+		logging:      s.logging ?? '1',
+		include:      s.include ?? '',
+		openappid:    s.openappid ?? '0',
+		oinkcode_set: length(s.oinkcode ?? '') > 0,
+		local_rules:  l.local_rules ?? '/etc/snort/local.rules',
+		rules_source: l.rules_source ?? 'community',
+		auto_update:  l.auto_update ?? '0',
+		restart_on_change: l.restart_on_change ?? '1',
+		has_luci_section: length(l) > 0,
+		disabled_sid: (type(l.disabled_sid) == 'array') ? l.disabled_sid : (l.disabled_sid ? [ l.disabled_sid ] : []),
+		disabled_category: (type(l.disabled_category) == 'array') ? l.disabled_category : (l.disabled_category ? [ l.disabled_category ] : [])
+	};
+}
+
+// Keep only the newest `keep` rolled-over copies of a log file (snort rolls
+// files over on restart or when the size limit is reached).
+function prune_rolled(pattern, keep) {
+	let files = sort(glob(pattern) ?? [], (a, b) => (stat(b)?.mtime ?? 0) - (stat(a)?.mtime ?? 0));
+	for (let i = keep; i < length(files); i++)
+		unlink(files[i]);
+}
+
+function alert_files(cfg) {
+	prune_rolled(`${cfg.log_dir}/*alert_json.txt.*`, 2);
+	let files = glob(`${cfg.log_dir}/*alert_json.txt*`) ?? [];
+	return sort(files, (a, b) => (stat(a)?.mtime ?? 0) - (stat(b)?.mtime ?? 0));
+}
+
+function service_info() {
+	let ubus = connect();
+	let res = { running: false, pid: null };
+	let svc = ubus?.call('service', 'list', { name: 'snort' });
+	for (let name, inst in svc?.snort?.instances ?? {}) {
+		if (inst.running) {
+			res.running = true;
+			res.pid = inst.pid;
+			break;
+		}
+	}
+	ubus?.disconnect();
+	return res;
+}
+
+function proc_info(pid) {
+	let info = { rss: null, started: null };
+	if (!pid)
+		return info;
+
+	let st = readfile(`/proc/${pid}/status`);
+	let m = st ? match(st, /VmRSS:\s+([0-9]+) kB/) : null;
+	if (m)
+		info.rss = int(m[1]) * 1024;
+
+	// Process start time = now - (uptime - starttime / CLK_TCK)
+	let pstat = readfile(`/proc/${pid}/stat`);
+	let up = readfile('/proc/uptime');
+	if (pstat && up) {
+		let rest = split(substr(pstat, index(pstat, ')') + 2), ' ');
+		let start_ticks = int(rest[19]);
+		let uptime = +split(up, ' ')[0];
+		info.started = time() - int(uptime - start_ticks / 100);
+	}
+	return info;
+}
+
+function mtime(path) {
+	return stat(path)?.mtime ?? 0;
+}
+
+function rules_dir_info(cfg) {
+	let dir = `${cfg.config_dir}/rules`;
+	let ls = lstat(dir);
+	let res = {
+		path: dir,
+		exists: false,
+		symlink: false,
+		target: null,
+		volatile: false,
+		files: [],
+		mtime: 0,
+		last_update: null,
+		source: null
+	};
+
+	if (!ls)
+		return res;
+
+	if (ls.type == 'link') {
+		res.symlink = true;
+		res.target = readlink(dir);
+	}
+
+	let st = stat(dir);
+	if (!st)
+		return res;    // dangling symlink
+
+	res.exists = true;
+	res.mtime = st.mtime;
+
+	let real = res.target ?? dir;
+	res.volatile = (index(real, '/var/') == 0 || index(real, '/tmp/') == 0);
+
+	for (let f in sort(glob(`${dir}/*.rules`) ?? [])) {
+		if (match(f, /includes\.rules$/))
+			continue;
+		let fst = stat(f);
+		push(res.files, { name: substr(f, length(dir) + 1), size: fst?.size ?? 0, mtime: fst?.mtime ?? 0 });
+		if ((fst?.mtime ?? 0) > res.mtime)
+			res.mtime = fst.mtime;
+	}
+
+	let meta = readfile(`${dir}/.luci-update`);
+	if (meta) {
+		try {
+			let j = json(meta);
+			res.last_update = j.time;
+			res.source = j.source;
+		} catch (e) { }
+	}
+
+	return res;
+}
+
+function count_rules(path) {
+	let fd = open(path, 'r');
+	let res = { enabled: 0, disabled: 0 };
+	if (!fd)
+		return res;
+	for (let line = fd.read('line'); length(line); line = fd.read('line')) {
+		if (match(line, /^\s*(alert|block|drop|reject|pass|log|rewrite|react|sdrop|file_id)\s/))
+			res.enabled++;
+		else if (match(line, /^\s*#\s*(alert|block|drop|reject|pass|log|rewrite|react|sdrop)\s.*sid:/))
+			res.disabled++;
+	}
+	fd.close();
+	return res;
+}
+
+function job_status(name) {
+	let pidf = `${JOBDIR}/${name}.pid`;
+	let pid = trim(readfile(pidf) ?? '');
+	let running = (pid != '' && access(`/proc/${pid}`));
+	let rc = readfile(`${JOBDIR}/${name}.rc`);
+	return {
+		name: name,
+		running: running,
+		rc: (rc != null && !running) ? int(trim(rc)) : null,
+		started: int(trim(readfile(`${JOBDIR}/${name}.started`) ?? '0')),
+		log: readfile(`${JOBDIR}/${name}.log`) ?? ''
+	};
+}
+
+// Snort timestamps: 'YY/MM/DD-hh:mm:ss.uuuuuu' (output.show_year) or 'MM/DD-hh:mm:ss.uuuuuu'
+function parse_ts(ts) {
+	let m = match(ts ?? '', /^(([0-9]+)\/)?([0-9]+)\/([0-9]+)-([0-9]+):([0-9]+):([0-9]+)(\.([0-9]+))?/);
+	if (!m)
+		return null;
+	let year = m[2] ? int(m[2]) : localtime().year;
+	if (year < 100)
+		year += 2000;
+	let t = timelocal({ year: year, mon: int(m[3]), mday: int(m[4]), hour: int(m[5]), min: int(m[6]), sec: int(m[7]) });
+	let frac = m[9] ? int(substr(m[9] + '000', 0, 3)) : 0;
+	return t * 1000 + frac;
+}
+
+function read_alert_lines(cfg, nlines) {
+	let files = alert_files(cfg);
+	let out = [];
+	for (let f in files) {
+		let fd = popen(`tail -n ${int(nlines)} ${shellquote(f)} 2>/dev/null`, 'r');
+		if (!fd)
+			continue;
+		for (let line = fd.read('line'); length(line); line = fd.read('line')) {
+			let j;
+			try { j = json(line); } catch (e) { continue; }
+			if (type(j) != 'object')
+				continue;
+			j.ts = (j.seconds != null) ? (parse_ts(j.timestamp) ?? j.seconds * 1000) : parse_ts(j.timestamp);
+			push(out, j);
+		}
+		fd.close();
+	}
+	if (length(files) > 1)
+		out = sort(out, (a, b) => (a.ts ?? 0) - (b.ts ?? 0));
+	return out;
+}
+
+function top(map, n) {
+	let arr = [];
+	for (let k, v in map)
+		push(arr, v);
+	arr = sort(arr, (a, b) => b.count - a.count);
+	return slice(arr, 0, n);
+}
+
+// Rule category = prefix of the message, e.g. "MALWARE-CNC", "(port_scan)".
+function category(msg, gid) {
+	let m = match(msg ?? '', /^([A-Z0-9][A-Z0-9_-]+) /);
+	if (m) return m[1];
+	m = match(msg ?? '', /^\(([a-z0-9_]+)\)/);
+	if (m) return `(${m[1]})`;
+	return (int(gid ?? 1) == 1) ? 'OTHER' : `GID ${gid}`;
+}
+
+function hours_of(alerts, now) {
+	let hours = [];
+	for (let i = 0; i < 24; i++) push(hours, 0);
+	for (let a in alerts) {
+		if (!a.ts || a.ts < now - 86400000 || a.ts > now + 60000) continue;
+		let h = 23 - int((now - a.ts) / 3600000);
+		if (h >= 0 && h < 24) hours[h]++;
+	}
+	return hours;
+}
+
+// perf_monitor writes a JSON array that is only closed at shutdown.
+function perf_records(pattern, from) {
+	let out = [];
+	for (let f in (glob(pattern) ?? [])) {
+		let c = trim(readfile(f) ?? '');
+		if (!length(c)) continue;
+		if (substr(c, 0, 1) == '[')
+			c = substr(c, 1);
+		while (length(c) && index(',] \n\t', substr(c, -1)) >= 0)
+			c = substr(c, 0, -1);
+		let arr;
+		try { arr = json(`[${c}]`); } catch (e) { continue; }
+		for (let r in arr)
+			if (type(r) == 'object' && r.timestamp && r.timestamp >= from)
+				push(out, r);
+	}
+	return sort(out, (a, b) => a.timestamp - b.timestamp);
+}
+
+const methods = {
+	getStatus: {
+		call: function() {
+			let cfg = config();
+			let svc = service_info();
+			let proc = proc_info(svc.pid);
+			let files = filter(alert_files(cfg), (f) => (stat(f)?.size ?? 0) > 0);
+			let asize = 0;
+			for (let f in files)
+				asize += stat(f)?.size ?? 0;
+
+			let rules = rules_dir_info(cfg);
+
+			// Detect configuration changes made after Snort was started.
+			let restart_needed = false;
+			if (svc.running && proc.started) {
+				let changed = max(mtime('/etc/config/snort'), mtime(cfg.local_rules), rules.mtime);
+				restart_needed = changed > proc.started + 2;
+			}
+
+			let jobs = {};
+			for (let j in JOBS) {
+				let pid = trim(readfile(`${JOBDIR}/${j}.pid`) ?? '');
+				jobs[j] = (pid != '' && access(`/proc/${pid}`)) ? true : false;
+			}
+
+			return {
+				running: svc.running,
+				pid: svc.pid,
+				rss: proc.rss,
+				started: proc.started,
+				uptime: proc.started ? time() - proc.started : null,
+				boot_enabled: length(glob('/etc/rc.d/S*snort') ?? []) > 0,
+				restart_needed: restart_needed,
+				enabled: cfg.enabled == '1',
+				manual: cfg.manual == '1',
+				mode: cfg.mode,
+				method: cfg.method,
+				action: cfg.action,
+				interface: cfg.iface,
+				home_net: cfg.home_net,
+				logging: cfg.logging == '1',
+				luci_include: cfg.include == LUCI_INCLUDE,
+				luci_section: cfg.has_luci_section,
+				rules_present: length(rules.files) > 0,
+				rules_volatile: rules.volatile,
+				rules_dangling: !rules.exists && rules.symlink,
+				rules_source: rules.source,
+				rules_updated: rules.last_update ?? (rules.mtime || null),
+				alert_files: length(files),
+				alert_size: asize,
+				jobs: jobs
+			};
+		}
+	},
+
+	getInfo: {
+		call: function() {
+			let cfg = config();
+			let ver = exec('/usr/bin/snort -V 2>&1');
+			let m = ver ? match(ver, /Version ([0-9.]+)/) : null;
+			let rules = rules_dir_info(cfg);
+			let total = { enabled: 0, disabled: 0 };
+			for (let f in rules.files) {
+				let c = count_rules(`${rules.path}/${f.name}`);
+				f.enabled = c.enabled;
+				f.disabled = c.disabled;
+				total.enabled += c.enabled;
+				total.disabled += c.disabled;
+			}
+			let local = count_rules(cfg.local_rules);
+
+			let daq = [];
+			for (let d in glob('/usr/lib/daq/daq_*.so') ?? [])
+				push(daq, replace(d, /^.*daq_(.+)\.so$/, '$1'));
+
+			return {
+				version: m ? m[1] : null,
+				openappid: access('/usr/lib/openappid') ? true : false,
+				coreutils_sort: access('/usr/libexec/sort-coreutils') || access('/usr/bin/sort-coreutils') ? true : false,
+				daq_modules: daq,
+				rules: rules,
+				rules_total: total,
+				local_rules: { path: cfg.local_rules, enabled: local.enabled },
+				rules_source: cfg.rules_source,
+				oinkcode_set: cfg.oinkcode_set,
+				auto_update: cfg.auto_update,
+				config_dir: cfg.config_dir,
+				log_dir: cfg.log_dir,
+				temp_dir: cfg.temp_dir
+			};
+		}
+	},
+
+	getAlerts: {
+		args: { limit: 500 },
+		call: function(req) {
+			let cfg = config();
+			let limit = int(req.args?.limit ?? 500);
+			if (limit < 1 || limit > MAX_ALERTS)
+				limit = 500;
+			let all = read_alert_lines(cfg, limit);
+			let alerts = slice(all, -limit);
+			return { alerts: reverse(alerts), files: alert_files(cfg), log_dir: cfg.log_dir, logging: cfg.logging == '1' };
+		}
+	},
+
+	getStats: {
+		args: { range: 0 },
+		call: function(req) {
+			let cfg = config();
+			let range = int(req.args?.range ?? 0);
+			let now = time() * 1000;
+			let from = (range > 0) ? now - range * 1000 : 0;
+			let alerts = filter(read_alert_lines(cfg, STATS_LINES), (a) => !from || (a.ts ?? 0) >= from);
+
+			let first = null, last = null;
+			for (let a in alerts) {
+				if (!a.ts) continue;
+				if (first == null || a.ts < first) first = a.ts;
+				if (last == null || a.ts > last) last = a.ts;
+			}
+
+			/* time buckets: at most ~60 */
+			let start = from || first || now;
+			let span = max(3600000, now - start);
+			let bsize = 3600000;
+			for (let b in [ 3600000, 10800000, 21600000, 43200000, 86400000 ])
+				if (span / b <= 60) { bsize = b; break; }
+			if (span / bsize > 60)
+				bsize = int(span / 60 / 86400000 + 1) * 86400000;
+			start = int(start / bsize) * bsize;
+			let nb = int((now - start) / bsize) + 1;
+			let buckets = [];
+			for (let i = 0; i < nb; i++)
+				push(buckets, { t: start + i * bsize, c: [ 0, 0, 0, 0 ] });
+
+			let heat = [];
+			for (let d = 0; d < 7; d++) { push(heat, []); for (let h = 0; h < 24; h++) push(heat[d], 0); }
+
+			let rules = {}, srcs = {}, dsts = {}, dports = {}, cats = {}, classes = {},
+			    prios = {}, actions = {}, protos = {}, services = {};
+			const inc = (m, k) => { if (k != null && k !== '') m[k] = (m[k] ?? 0) + 1; };
+
+			for (let a in alerts) {
+				let p = int(a.priority ?? 0);
+				let pi = (p >= 1 && p <= 3) ? p - 1 : 3;
+				let bi = a.ts ? int((a.ts - start) / bsize) : -1;
+				if (bi >= 0 && bi < nb)
+					buckets[bi].c[pi]++;
+				if (a.ts) {
+					let lt = localtime(int(a.ts / 1000));
+					heat[(lt.wday + 6) % 7][lt.hour]++;
+				}
+
+				let cat = category(a.msg, a.gid);
+				let key = `${a.gid ?? 1}:${a.sid ?? 0}`;
+				let r = rules[key] ??= {
+					gid: a.gid ?? 1, sid: a.sid ?? 0, rev: a.rev, msg: a.msg, cat: cat,
+					cls: a.class, prio: a.priority, count: 0, first: a.ts, last: a.ts,
+					srcs: {}, dsts: {}, pairs: {}, actions: {}, spark: []
+				};
+				r.count++;
+				if (a.ts && a.ts < r.first) r.first = a.ts;
+				if (a.ts && a.ts > r.last) r.last = a.ts;
+				inc(r.srcs, a.src_addr);
+				inc(r.dsts, a.dst_addr);
+				inc(r.pairs, `${a.src_addr}>${a.dst_addr}`);
+				inc(r.actions, a.action);
+				if (bi >= 0 && bi < nb)
+					r.spark[bi] = (r.spark[bi] ?? 0) + 1;
+
+				inc(srcs, a.src_addr);
+				inc(dsts, a.dst_addr);
+				if (a.dst_port != null && a.proto in [ 'TCP', 'UDP' ])
+					inc(dports, `${a.dst_port}/${lc(a.proto)}`);
+				inc(cats, cat);
+				inc(classes, (a.class && a.class != 'none') ? a.class : null);
+				inc(prios, `${p}`);
+				inc(actions, a.action ?? 'unknown');
+				inc(protos, a.proto ?? 'other');
+				inc(services, (a.service && a.service != 'unknown') ? a.service : null);
+			}
+
+			/* rule effectiveness list */
+			let rlist = [];
+			for (let k, r in rules) {
+				let top_pair = 0;
+				for (let pk, pv in r.pairs)
+					if (pv > top_pair) top_pair = pv;
+				let spark = [];
+				for (let i = 0; i < nb; i++)
+					push(spark, r.spark[i] ?? 0);
+				push(rlist, {
+					gid: r.gid, sid: r.sid, rev: r.rev, msg: r.msg, cat: r.cat, cls: r.cls, prio: r.prio,
+					count: r.count, first: r.first, last: r.last,
+					srcs: length(keys(r.srcs)), dsts: length(keys(r.dsts)),
+					top_pair_share: r.count ? top_pair / r.count : 0,
+					actions: keys(r.actions), spark: spark
+				});
+			}
+			rlist = sort(rlist, (a, b) => b.count - a.count);
+			let cumulative = map(rlist, (r) => r.count);
+			let cat_rules = {};
+			for (let r in rlist)
+				cat_rules[r.cat] = (cat_rules[r.cat] ?? 0) + 1;
+
+			const toplist = (m, n) => slice(sort(map(keys(m), (k) => ({ key: k, count: m[k] })), (a, b) => b.count - a.count), 0, n);
+
+			return {
+				range: range, now: now, total: length(alerts), truncated: length(alerts) >= STATS_LINES,
+				first: first, last: last, bucket: bsize, buckets: buckets, heat: heat,
+				distinct_rules: length(rlist), unique_srcs: length(keys(srcs)), unique_dsts: length(keys(dsts)),
+				rules: slice(rlist, 0, 50), counts: cumulative,
+				categories: cats, cat_rules: cat_rules, classes: toplist(classes, 10), priorities: prios,
+				actions: actions, protos: protos, services: toplist(services, 10),
+				top_srcs: toplist(srcs, 10), top_dsts: toplist(dsts, 10), top_dports: toplist(dports, 10),
+				// compatibility with the overview page
+				last24: length(filter(alerts, (a) => (a.ts ?? 0) >= now - 86400000)),
+				unique_sigs: length(rlist),
+				top_sigs: map(slice(rlist, 0, 10), (r) => ({ gid: r.gid, sid: r.sid, msg: r.msg, count: r.count })),
+				hours: hours_of(alerts, now)
+			};
+		}
+	},
+
+	getPerf: {
+		args: { range: 0 },
+		call: function(req) {
+			let cfg = config();
+			let range = int(req.args?.range ?? 0);
+			let from = range > 0 ? time() - range : 0;
+			prune_rolled(`${cfg.log_dir}/perf_monitor_base.json_*`, 3);
+			prune_rolled(`${cfg.log_dir}/perf_monitor_cpu.json_*`, 3);
+
+			let base = perf_records(`${cfg.log_dir}/perf_monitor_base.json*`, from);
+			let cpu = {};
+			for (let r in perf_records(`${cfg.log_dir}/perf_monitor_cpu.json*`, from)) {
+				let busy = 0, wall = 0;
+				for (let k, v in r)
+					if (index(k, 'thread_') == 0) {
+						busy += (v.cpu_user ?? 0) + (v.cpu_system ?? 0);
+						wall = max(wall, v.cpu_wall ?? 0);
+					}
+				if (wall > 0)
+					cpu[r.timestamp] = (busy * 100.0) / wall;
+			}
+
+			let pts = [], prev = null;
+			for (let r in base) {
+				let d = r.daq ?? {}, ia = r.ips_actions ?? {}, lat = r.latency ?? {};
+				let dt = prev ? r.timestamp - prev : 0;
+				prev = r.timestamp;
+				push(pts, {
+					t: r.timestamp, dt: dt,
+					received: d.received ?? 0, analyzed: d.analyzed ?? 0,
+					dropped: d.dropped ?? 0,
+					bytes: d.rx_bytes ?? 0,
+					alerts: r.detection?.alerts ?? 0,
+					blocked: (ia.block ?? 0) + (ia.drop ?? 0) + (ia.reject ?? 0) + (d.block ?? 0),
+					flows: r.stream?.flows ?? 0,
+					rule_timeouts: (lat.rule_eval_timeouts ?? 0),
+					cpu: cpu[r.timestamp]
+				});
+			}
+
+			return {
+				enabled: length(glob(`${cfg.log_dir}/perf_monitor_base.json*`) ?? []) > 0,
+				interval: int(cursor().get('snort', 'luci', 'perfmon_interval') ?? 60),
+				points: pts
+			};
+		}
+	},
+
+	getCategories: {
+		call: function() {
+			let cfg = config();
+			let res = {};
+			for (let f in sort(glob(`${cfg.config_dir}/rules/*.rules`) ?? [])) {
+				let fd = open(f, 'r');
+				if (!fd) continue;
+				for (let line = fd.read('line'); length(line); line = fd.read('line')) {
+					let active = match(line, /^\s*(alert|block|drop|reject|pass|log|rewrite|react|sdrop)\s/);
+					let commented = !active && match(line, /^\s*#\s*(alert|block|drop|reject|pass|log|rewrite|react|sdrop)\s.*sid:/);
+					if (!active && !commented) continue;
+					let m = match(line, /msg:\s*"([^"]*)"/);
+					let c = category(m ? m[1] : '', 1);
+					res[c] ??= { name: c, rules: 0, commented: 0 };
+					if (active) res[c].rules++; else res[c].commented++;
+				}
+				fd.close();
+			}
+			return {
+				categories: sort(values(res), (a, b) => b.rules - a.rules),
+				disabled_category: cfg.disabled_category,
+				disabled_sid: cfg.disabled_sid
+			};
+		}
+	},
+
+	clearAlerts: {
+		call: function() {
+			let cfg = config();
+			let n = 0;
+			for (let f in alert_files(cfg)) {
+				writefile(f, '');
+				n++;
+			}
+			return { result: true, cleared: n };
+		}
+	},
+
+	lookupRule: {
+		args: { gid: 1, sid: 0 },
+		call: function(req) {
+			let cfg = config();
+			let gid = int(req.args?.gid ?? 1);
+			let sid = int(req.args?.sid ?? 0);
+			if (sid <= 0)
+				return { error: 'Invalid SID' };
+
+			let files = glob(`${cfg.config_dir}/rules/*.rules`) ?? [];
+			push(files, cfg.local_rules);
+			let found = [];
+			for (let f in files) {
+				if (!access(f))
+					continue;
+				let out = exec(`grep -n -E ${shellquote(`sid:[[:space:]]*${sid}[[:space:]]*;`)} ${shellquote(f)} 2>/dev/null`);
+				for (let line in split(out ?? '', '\n')) {
+					if (!length(line))
+						continue;
+					let m = match(line, /^([0-9]+):(.*)$/);
+					let text = m ? m[2] : line;
+					if (match(text, /^[ \t]*#/))
+						continue;
+					let g = match(text, /gid:\s*([0-9]+)\s*;/);
+					if ((g ? int(g[1]) : 1) != gid)
+						continue;
+					push(found, { file: f, line: m ? int(m[1]) : 0, rule: text });
+				}
+			}
+
+			if (!length(found) && gid != 1) {
+				let out = exec(`/usr/bin/snort --list-builtin 2>/dev/null | grep -E ${shellquote(`^${gid}:${sid}[^0-9]`)}`);
+				if (length(out))
+					push(found, { file: 'builtin', line: 0, rule: trim(out) });
+			}
+
+			return { gid: gid, sid: sid, rules: found };
+		}
+	},
+
+	getSyslog: {
+		args: { lines: 500 },
+		call: function(req) {
+			let n = int(req.args?.lines ?? 500);
+			if (n < 1 || n > 5000)
+				n = 500;
+			let out = exec(`/sbin/logread -e 'snort' 2>/dev/null | tail -n ${n}`);
+			return { log: out ?? '' };
+		}
+	},
+
+	serviceAction: {
+		args: { action: 'action' },
+		call: function(req) {
+			let action = req.args?.action;
+			if (!(action in [ 'start', 'stop', 'restart', 'enable', 'disable' ]))
+				return { result: false, error: 'Invalid action' };
+			let out = exec(`/etc/init.d/snort ${action} 2>&1; echo "rc=$?"`);
+			let m = match(out ?? '', /rc=([0-9]+)\s*$/);
+			let rc = m ? int(m[1]) : 1;
+			return { result: rc == 0, rc: rc, output: replace(out ?? '', /rc=[0-9]+\s*$/, '') };
+		}
+	},
+
+	jobStart: {
+		args: { name: 'name' },
+		call: function(req) {
+			let name = req.args?.name;
+			if (!(name in JOBS))
+				return { result: false, error: 'Invalid job' };
+			if (job_status(name).running)
+				return { result: false, error: 'Job already running' };
+			mkdir(JOBDIR);
+			writefile(`${JOBDIR}/${name}.log`, '');
+			writefile(`${JOBDIR}/${name}.pid`, '');
+			writefile(`${JOBDIR}/${name}.started`, `${time()}`);
+			unlink(`${JOBDIR}/${name}.rc`);
+			system(`${HELPER} job ${name} >/dev/null 2>&1 </dev/null &`);
+			return { result: true };
+		}
+	},
+
+	jobStatus: {
+		args: { name: 'name' },
+		call: function(req) {
+			let name = req.args?.name;
+			if (!(name in JOBS))
+				return { error: 'Invalid job' };
+			return job_status(name);
+		}
+	},
+
+	printConfig: {
+		args: { type: 'type' },
+		call: function(req) {
+			let t = req.args?.type;
+			if (!(t in [ 'snort', 'nftables', 'config' ]))
+				return { error: 'Invalid type' };
+			let out = exec(`/usr/bin/snort-mgr print ${t} 2>&1`);
+			return { output: out ?? '' };
+		}
+	},
+
+	getLocalRules: {
+		call: function() {
+			let cfg = config();
+			return {
+				path: cfg.local_rules,
+				content: readfile(cfg.local_rules) ?? '',
+				exists: access(cfg.local_rules) ? true : false
+			};
+		}
+	},
+
+	setLocalRules: {
+		args: { content: 'content' },
+		call: function(req) {
+			let cfg = config();
+			let content = req.args?.content;
+			if (type(content) != 'string')
+				return { result: false, error: 'Missing content' };
+			if (length(content) > MAX_RULES_SZ)
+				return { result: false, error: 'File too large' };
+			content = replace(content, /\r\n/g, '\n');
+			if (length(content) && substr(content, -1) != '\n')
+				content += '\n';
+			let dir = replace(cfg.local_rules, /\/[^\/]+$/, '');
+			if (length(dir))
+				mkdir(dir);
+			let ok = writefile(cfg.local_rules, content);
+			return { result: ok != null, path: cfg.local_rules };
+		}
+	}
+};
+
+return { 'luci.snort': methods };

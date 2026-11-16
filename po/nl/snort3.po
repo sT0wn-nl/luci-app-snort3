@@ -1,0 +1,1508 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "High (1)"
+msgstr "Hoog (1)"
+
+msgid "Medium (2)"
+msgstr "Middel (2)"
+
+msgid "Low (3)"
+msgstr "Laag (3)"
+
+msgid "Unclassified"
+msgstr "Niet geclassificeerd"
+
+msgid "Alerts"
+msgstr "Alerts"
+
+msgid "Total"
+msgstr "Totaal"
+
+msgid "Not enough data yet."
+msgstr "Nog niet genoeg gegevens."
+
+msgid "No data."
+msgstr "Geen gegevens."
+
+msgid "Share"
+msgstr "Aandeel"
+
+msgid "fewer"
+msgstr "minder"
+
+msgid "more"
+msgstr "meer"
+
+msgid "(max %s per cell)"
+msgstr "(max. %s per vak)"
+
+msgid "This suppression already exists."
+msgstr "Deze onderdrukking bestaat al."
+
+msgid "Suppression for rule %d:%d added. Use “Save & Apply” (unsaved changes, top right) to activate it."
+msgstr "Onderdrukking voor regel %d:%d toegevoegd. Gebruik “Opslaan & toepassen” (niet-opgeslagen wijzigingen, rechtsboven) om haar te activeren."
+
+msgid "View suppressions"
+msgstr "Onderdrukkingen bekijken"
+
+msgid "Rule %s is already disabled."
+msgstr "Regel %s is al uitgeschakeld."
+
+msgid "Rule %s (%s) will be disabled. Use “Save & Apply” (unsaved changes, top right) to activate it."
+msgstr "Regel %s (%s) wordt uitgeschakeld. Gebruik “Opslaan & toepassen” (niet-opgeslagen wijzigingen, rechtsboven) om dit te activeren."
+
+msgid "View disabled rules"
+msgstr "Uitgeschakelde regels bekijken"
+
+msgid "Open the rule documentation on snort.org"
+msgstr "Open de regeldocumentatie op snort.org"
+
+msgid "IPS – inline prevention"
+msgstr "IPS – inline preventie"
+
+msgid "IDS – passive detection"
+msgstr "IDS – passieve detectie"
+
+msgid "Snort community rules"
+msgstr "Snort community-regels"
+
+msgid "Snort registered/subscriber rules (oinkcode)"
+msgstr "Snort registered/subscriber-regels (oinkcode)"
+
+msgid "Test rules (ICMP ping only)"
+msgstr "Testregels (alleen ICMP-ping)"
+
+msgid "unknown"
+msgstr "onbekend"
+
+msgid "Starting Snort…"
+msgstr "Snort wordt gestart…"
+
+msgid "Stopping Snort…"
+msgstr "Snort wordt gestopt…"
+
+msgid "Restarting Snort…"
+msgstr "Snort wordt herstart…"
+
+msgid "Enabling Snort at boot…"
+msgstr "Snort wordt ingeschakeld bij opstarten…"
+
+msgid "Disabling Snort at boot…"
+msgstr "Snort wordt uitgeschakeld bij opstarten…"
+
+msgid "Command \"%s\" failed (exit code %s)."
+msgstr "Opdracht \"%s\" mislukt (exitcode %s)."
+
+msgid "Run a configuration test from the Overview page for details."
+msgstr "Voer een configuratietest uit via de pagina Overzicht voor details."
+
+msgid "Starting…"
+msgstr "Starten…"
+
+msgid "Running, please wait…"
+msgstr "Bezig, even geduld…"
+
+msgid "Close"
+msgstr "Sluiten"
+
+msgid "Unable to start job"
+msgstr "Kan de taak niet starten"
+
+msgid "Finished successfully"
+msgstr "Succesvol afgerond"
+
+msgid "Failed (exit code %d)"
+msgstr "Mislukt (exitcode %d)"
+
+msgid "Generated Snort configuration"
+msgstr "Gegenereerde Snort-configuratie"
+
+msgid "Generated nftables rules (NFQ)"
+msgstr "Gegenereerde nftables-regels (NFQ)"
+
+msgid "Effective UCI configuration incl. defaults"
+msgstr "Effectieve UCI-configuratie incl. standaardwaarden"
+
+msgid "Loading…"
+msgstr "Laden…"
+
+msgid "(empty)"
+msgstr "(leeg)"
+
+msgid "Manual configuration mode."
+msgstr "Handmatige configuratiemodus."
+
+msgid "Snort is started with its own snort.lua; network, detection and logging settings, custom rules and suppressions from LuCI are not applied."
+msgstr "Snort wordt gestart met een eigen snort.lua; netwerk-, detectie- en loginstellingen, eigen regels en onderdrukkingen uit LuCI worden niet toegepast."
+
+msgid "Change in Settings"
+msgstr "Wijzigen bij Instellingen"
+
+msgid "The LuCI include hook is not active (option snort.snort.include was changed). Custom rules and suppressions are not applied."
+msgstr "De LuCI-include is niet actief (optie snort.snort.include is gewijzigd). Eigen regels en onderdrukkingen worden niet toegepast."
+
+msgid "Time"
+msgstr "Tijd"
+
+msgid "Action"
+msgstr "Actie"
+
+msgid "Proto"
+msgstr "Proto"
+
+msgid "Source"
+msgstr "Bron"
+
+msgid "Destination"
+msgstr "Bestemming"
+
+msgid "Rule"
+msgstr "Regel"
+
+msgid "Message"
+msgstr "Melding"
+
+msgid "No alerts match the filter."
+msgstr "Geen alerts die aan het filter voldoen."
+
+msgid "No alerts logged."
+msgstr "Geen alerts gelogd."
+
+msgid "Newer"
+msgstr "Nieuwer"
+
+msgid "Page %d of %d"
+msgstr "Pagina %d van %d"
+
+msgid "Older"
+msgstr "Ouder"
+
+msgid "(+%d more)"
+msgstr "(+%d meer)"
+
+msgid "Count"
+msgstr "Aantal"
+
+msgid "Sources"
+msgstr "Bronnen"
+
+msgid "Destinations"
+msgstr "Bestemmingen"
+
+msgid "Last seen"
+msgstr "Laatst gezien"
+
+msgid "%d of %d loaded alerts"
+msgstr "%d van %d geladen alerts"
+
+msgid "Looking up rule…"
+msgstr "Regel opzoeken…"
+
+msgid "Rule text not found in the installed rule files."
+msgstr "Regeltekst niet gevonden in de geïnstalleerde regelbestanden."
+
+msgid "Alert details"
+msgstr "Alertdetails"
+
+msgid "Rule documentation on snort.org"
+msgstr "Regeldocumentatie op snort.org"
+
+msgid "Suppress this alert"
+msgstr "Deze alert onderdrukken"
+
+msgid "Suppress rule completely"
+msgstr "Regel volledig onderdrukken"
+
+msgid "Only from %s"
+msgstr "Alleen vanaf %s"
+
+msgid "Only to %s"
+msgstr "Alleen naar %s"
+
+msgid "Disable this rule"
+msgstr "Deze regel uitschakelen"
+
+msgid "A disabled rule is no longer evaluated at all (saves CPU). Prefer suppression if the rule is useful for other hosts."
+msgstr "Een uitgeschakelde regel wordt helemaal niet meer geëvalueerd (bespaart CPU). Kies liever onderdrukken als de regel voor andere hosts nuttig is."
+
+msgid "Disable rule %d:%d"
+msgstr "Regel %d:%d uitschakelen"
+
+msgid "Clear alert log"
+msgstr "Alertlog wissen"
+
+msgid "Delete all logged alerts? This cannot be undone."
+msgstr "Alle gelogde alerts verwijderen? Dit kan niet ongedaan worden gemaakt."
+
+msgid "Cancel"
+msgstr "Annuleren"
+
+msgid "Clear"
+msgstr "Wissen"
+
+msgid "Search message, IP, port or SID…"
+msgstr "Zoek op melding, IP, poort of SID…"
+
+msgid "All time"
+msgstr "Alle tijden"
+
+msgid "Last hour"
+msgstr "Afgelopen uur"
+
+msgid "Last 24 hours"
+msgstr "Afgelopen 24 uur"
+
+msgid "Last 7 days"
+msgstr "Afgelopen 7 dagen"
+
+msgid "Time range"
+msgstr "Tijdsperiode"
+
+msgid "All actions"
+msgstr "Alle acties"
+
+msgid "Show events"
+msgstr "Toon gebeurtenissen"
+
+msgid "Group by rule"
+msgstr "Groepeer per regel"
+
+msgid "View"
+msgstr "Weergave"
+
+msgid "Last %d"
+msgstr "Laatste %d"
+
+msgid "Number of alerts to load"
+msgstr "Aantal te laden alerts"
+
+msgid "Auto refresh"
+msgstr "Automatisch verversen"
+
+msgid "Refresh"
+msgstr "Verversen"
+
+msgid "Export CSV"
+msgstr "Exporteer CSV"
+
+msgid "Clear log"
+msgstr "Log wissen"
+
+msgid "Alert logging is disabled in the settings; no new alerts will be shown."
+msgstr "Alertlogging is uitgeschakeld in de instellingen; er worden geen nieuwe alerts getoond."
+
+msgid "With the pcap DAQ Snort may write alerts in batches, so new alerts can appear with a delay. Use afpacket for near real-time alerts."
+msgstr "Met de pcap-DAQ schrijft Snort alerts mogelijk in batches, waardoor nieuwe alerts vertraagd verschijnen. Gebruik afpacket voor vrijwel realtime alerts."
+
+msgid "Snort IDS – Alerts"
+msgstr "Snort IDS – Alerts"
+
+msgid "Alerts from %s. Click an alert for details, the matching rule and to suppress false positives."
+msgstr "Alerts uit %s. Klik op een alert voor details, de bijbehorende regel en om valse meldingen te onderdrukken."
+
+msgid "the alert log"
+msgstr "het alertlog"
+
+msgid "Line %d: rule without sid"
+msgstr "Regel %d: regel zonder sid"
+
+msgid "Line %d: rule does not end with \")\""
+msgstr "Regel %d: regel eindigt niet op \")\""
+
+msgid "Duplicate sid %s"
+msgstr "Dubbele sid %s"
+
+msgid "%d active rule(s)"
+msgstr "%d actieve regel(s)"
+
+msgid "Snort IDS – Custom Rules"
+msgstr "Snort IDS – Eigen regels"
+
+msgid "Your own Snort rules, loaded in addition to the downloaded rule set. They are stored in <code>%h</code> and kept on sysupgrade. After saving, Snort is restarted when you use “Save & Apply”."
+msgstr "Je eigen Snort-regels, geladen naast de gedownloade regelset. Ze worden opgeslagen in <code>%h</code> en blijven behouden bij een sysupgrade. Bij “Opslaan & toepassen” wordt Snort na het opslaan herstart."
+
+msgid "Save & test configuration"
+msgstr "Opslaan & configuratie testen"
+
+msgid "Insert examples"
+msgstr "Voorbeelden invoegen"
+
+msgid "Rule writing guide"
+msgstr "Handleiding regels schrijven"
+
+msgid "Quick reference"
+msgstr "Beknopt overzicht"
+
+msgid "Saved with warnings: %s"
+msgstr "Opgeslagen met waarschuwingen: %s"
+
+msgid "Unable to save the custom rules"
+msgstr "Kan de eigen regels niet opslaan"
+
+msgid "Configuration test"
+msgstr "Configuratietest"
+
+msgid "Custom rules saved. Restart Snort to activate them."
+msgstr "Eigen regels opgeslagen. Herstart Snort om ze te activeren."
+
+msgid "Custom rules saved. Snort is not running."
+msgstr "Eigen regels opgeslagen. Snort draait niet."
+
+msgid "Testing configuration before restart"
+msgstr "Configuratie testen vóór herstart"
+
+msgid "Custom rules saved and Snort restarted."
+msgstr "Eigen regels opgeslagen en Snort herstart."
+
+msgid "No log entries."
+msgstr "Geen logregels."
+
+msgid "Filter…"
+msgstr "Filter…"
+
+msgid "Snort IDS – System Log"
+msgstr "Snort IDS – Systeemlog"
+
+msgid "Messages from Snort, snort-rules, snort-mgr and luci-snort in the system log (newest first). Useful when Snort fails to start."
+msgstr "Meldingen van Snort, snort-rules, snort-mgr en luci-snort in het systeemlog (nieuwste eerst). Handig als Snort niet wil starten."
+
+msgid "Snort is disabled."
+msgstr "Snort is uitgeschakeld."
+
+msgid "Configure the interface and networks, install a rule set and then enable Snort."
+msgstr "Stel de interface en netwerken in, installeer een regelset en schakel Snort daarna in."
+
+msgid "Go to Settings"
+msgstr "Naar Instellingen"
+
+msgid "The rule set is missing."
+msgstr "De regelset ontbreekt."
+
+msgid "The rules were stored in RAM and are gone (e.g. after a reboot). Download them again or enable persistent storage."
+msgstr "De regels stonden in het RAM en zijn verdwenen (bijv. na een herstart). Download ze opnieuw of schakel permanente opslag in."
+
+msgid "Go to Rules"
+msgstr "Naar Regels"
+
+msgid "No rules installed."
+msgstr "Geen regels geïnstalleerd."
+
+msgid "Snort cannot detect anything without rules."
+msgstr "Zonder regels kan Snort niets detecteren."
+
+msgid "Download a rule set"
+msgstr "Download een regelset"
+
+msgid "The rule set is stored in RAM and will be lost after a reboot."
+msgstr "De regelset staat in het RAM en gaat verloren na een herstart."
+
+msgid "Enable persistent storage or automatic updates"
+msgstr "Schakel permanente opslag of automatische updates in"
+
+msgid "IPS mode cannot work with the pcap DAQ. Use NFQ (recommended) or afpacket."
+msgstr "IPS-modus werkt niet met de pcap-DAQ. Gebruik NFQ (aanbevolen) of afpacket."
+
+msgid "Alert logging is disabled, so the Alerts page and statistics stay empty."
+msgstr "Alertlogging is uitgeschakeld; de pagina Alerts en de statistieken blijven daardoor leeg."
+
+msgid "Enable in Settings"
+msgstr "Inschakelen bij Instellingen"
+
+msgid "Restart required."
+msgstr "Herstart vereist."
+
+msgid "The configuration or rules changed after Snort was started."
+msgstr "De configuratie of regels zijn gewijzigd nadat Snort is gestart."
+
+msgid "Restart now"
+msgstr "Nu herstarten"
+
+msgid "Running"
+msgstr "Actief"
+
+msgid "Stopped"
+msgstr "Gestopt"
+
+msgid "Disabled"
+msgstr "Uitgeschakeld"
+
+msgid "Rule update running"
+msgstr "Regelupdate bezig"
+
+msgid "Configuration test running"
+msgstr "Configuratietest bezig"
+
+msgid "%d active rules in %d file(s)"
+msgstr "%d actieve regels in %d bestand(en)"
+
+msgid "none"
+msgstr "geen"
+
+msgid "Service"
+msgstr "Dienst"
+
+msgid "Start at boot"
+msgstr "Starten bij opstarten"
+
+msgid "yes"
+msgstr "ja"
+
+msgid "no"
+msgstr "nee"
+
+msgid "Snort version"
+msgstr "Snort-versie"
+
+msgid "Process"
+msgstr "Proces"
+
+msgid "PID %d, running for %s, memory %s"
+msgstr "PID %d, actief sinds %s, geheugen %s"
+
+msgid "Configuration mode"
+msgstr "Configuratiemodus"
+
+msgid "Manual (own snort.lua)"
+msgstr "Handmatig (eigen snort.lua)"
+
+msgid "Managed by LuCI"
+msgstr "Beheerd door LuCI"
+
+msgid "Operation mode"
+msgstr "Werkingsmodus"
+
+msgid "Packet capture (DAQ)"
+msgstr "Pakketcaptatie (DAQ)"
+
+msgid "Interface"
+msgstr "Interface"
+
+msgid "Home network"
+msgstr "Thuisnetwerk"
+
+msgid "Rule set"
+msgstr "Regelset"
+
+msgid "updated %s"
+msgstr "bijgewerkt %s"
+
+msgid "stored in RAM"
+msgstr "opgeslagen in RAM"
+
+msgid "stored in flash"
+msgstr "opgeslagen in flash"
+
+msgid "Custom rules"
+msgstr "Eigen regels"
+
+msgid "%d active"
+msgstr "%d actief"
+
+msgid "Alert log"
+msgstr "Alertlog"
+
+msgid "%s in %d file(s)"
+msgstr "%s in %d bestand(en)"
+
+msgid "no alert log yet"
+msgstr "nog geen alertlog"
+
+msgid "Start"
+msgstr "Start"
+
+msgid "Stop"
+msgstr "Stop"
+
+msgid "Restart"
+msgstr "Herstart"
+
+msgid "Disable at boot"
+msgstr "Uitschakelen bij opstarten"
+
+msgid "Enable at boot"
+msgstr "Inschakelen bij opstarten"
+
+msgid "Test configuration"
+msgstr "Configuratie testen"
+
+msgid "Show generated config"
+msgstr "Toon gegenereerde config"
+
+msgid "Show nftables rules"
+msgstr "Toon nftables-regels"
+
+msgid "No alerts have been logged yet."
+msgstr "Er zijn nog geen alerts gelogd."
+
+msgid "Alerts in log"
+msgstr "Alerts in log"
+
+msgid "Distinct rules"
+msgstr "Verschillende regels"
+
+msgid "Source addresses"
+msgstr "Bronadressen"
+
+msgid "%02d:00 – %d alerts"
+msgstr "%02d:00 – %d alerts"
+
+msgid "Alerts per hour (last 24 hours)"
+msgstr "Alerts per uur (afgelopen 24 uur)"
+
+msgid "Top rules"
+msgstr "Meest getriggerde regels"
+
+msgid "Top source addresses"
+msgstr "Meest voorkomende bronadressen"
+
+msgid "Address"
+msgstr "Adres"
+
+msgid "Top destination addresses"
+msgstr "Meest voorkomende bestemmingsadressen"
+
+msgid "Snort IDS"
+msgstr "Snort IDS"
+
+msgid "Snort 3 is an open source network intrusion detection and prevention system. It inspects traffic on the selected interface, matches it against a rule set and logs (IDS) or blocks (IPS) suspicious traffic."
+msgstr "Snort 3 is een opensource-systeem voor detectie en preventie van netwerkinbraken. Het inspecteert het verkeer op de gekozen interface, vergelijkt het met een regelset en logt (IDS) of blokkeert (IPS) verdacht verkeer."
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Alert statistics"
+msgstr "Alertstatistieken"
+
+msgid "More statistics"
+msgstr "Meer statistieken"
+
+msgid "Missing (lost after reboot)"
+msgstr "Ontbreekt (verloren na herstart)"
+
+msgid "Not installed"
+msgstr "Niet geïnstalleerd"
+
+msgid "Installed"
+msgstr "Geïnstalleerd"
+
+msgid "%s → %s"
+msgstr "%s → %s"
+
+msgid "State"
+msgstr "Toestand"
+
+msgid "unknown (installed outside LuCI)"
+msgstr "onbekend (buiten LuCI geïnstalleerd)"
+
+msgid "Last update"
+msgstr "Laatste update"
+
+msgid "Location"
+msgstr "Locatie"
+
+msgid "RAM"
+msgstr "RAM"
+
+msgid "flash"
+msgstr "flash"
+
+msgid "Rules"
+msgstr "Regels"
+
+msgid "%d active, %d disabled (commented out)"
+msgstr "%d actief, %d uitgeschakeld (uitgecommentarieerd)"
+
+msgid "%d active in %s"
+msgstr "%d actief in %s"
+
+msgid "Edit"
+msgstr "Bewerken"
+
+msgid "Rule files (%d)"
+msgstr "Regelbestanden (%d)"
+
+msgid "File"
+msgstr "Bestand"
+
+msgid "Active"
+msgstr "Actief"
+
+msgid "Size"
+msgstr "Grootte"
+
+msgid "Modified"
+msgstr "Gewijzigd"
+
+msgid "Update running…"
+msgstr "Update bezig…"
+
+msgid "Download / update rules now"
+msgstr "Regels nu downloaden / bijwerken"
+
+msgid "Uses the saved settings below. Save & Apply changes first."
+msgstr "Gebruikt de opgeslagen instellingen hieronder. Pas wijzigingen eerst toe met Opslaan & toepassen."
+
+msgid "Restart Snort now"
+msgstr "Snort nu herstarten"
+
+msgid "Updating Snort rules"
+msgstr "Snort-regels bijwerken"
+
+msgid "Install a rule set to manage its categories."
+msgstr "Installeer een regelset om de categorieën te beheren."
+
+msgid "Enabled"
+msgstr "Ingeschakeld"
+
+msgid "Uncheck a category to disable all its rules (they are not evaluated, saving CPU and memory). The alert columns cover the last 30 days and help to spot noisy categories. Save & Apply to activate."
+msgstr "Vink een categorie uit om al haar regels uit te schakelen (ze worden niet geëvalueerd, wat CPU en geheugen bespaart). De alertkolommen beslaan de afgelopen 30 dagen en helpen luidruchtige categorieën te herkennen. Activeer met Opslaan & toepassen."
+
+msgid "Category"
+msgstr "Categorie"
+
+msgid "Alerts (30 days)"
+msgstr "Alerts (30 dagen)"
+
+msgid "Rules fired"
+msgstr "Regels getriggerd"
+
+msgid "Snort IDS – Rules"
+msgstr "Snort IDS – Regels"
+
+msgid "Snort needs a rule set to detect anything. The free <em>community</em> rules need no account; the larger <em>registered/subscriber</em> rule sets need an oinkcode from snort.org."
+msgstr "Snort heeft een regelset nodig om iets te detecteren. De gratis <em>community</em>-regels vereisen geen account; voor de uitgebreidere <em>registered/subscriber</em>-regelsets heb je een oinkcode van snort.org nodig."
+
+msgid "Installed rule set"
+msgstr "Geïnstalleerde regelset"
+
+msgid "Rule source & updates"
+msgstr "Regelbron & updates"
+
+msgid "Snort community rules (free, ~4,000 rules)"
+msgstr "Snort community-regels (gratis, ~4.000 regels)"
+
+msgid "Test rules (only alerts on ICMP ping, no download)"
+msgstr "Testregels (alleen alerts op ICMP-ping, geen download)"
+
+msgid "Oinkcode"
+msgstr "Oinkcode"
+
+msgid "Personal code from your account at <a href=\"https://www.snort.org/oinkcodes\" target=\"_blank\" rel=\"noreferrer\">snort.org/oinkcodes</a>. Note: the snort3 package downloads the snapshot for a fixed Snort version."
+msgstr "Persoonlijke code uit je account op <a href=\"https://www.snort.org/oinkcodes\" target=\"_blank\" rel=\"noreferrer\">snort.org/oinkcodes</a>. Let op: het snort3-pakket downloadt de snapshot voor een vaste Snort-versie."
+
+msgid "An oinkcode is required for this rule set"
+msgstr "Voor deze regelset is een oinkcode vereist"
+
+msgid "An oinkcode is a 40 character hexadecimal string"
+msgstr "Een oinkcode is een hexadecimale reeks van 40 tekens"
+
+msgid "Store rules persistently"
+msgstr "Regels permanent opslaan"
+
+msgid "Keep the rules in <code>%s/rules</code> on flash so they survive a reboot (several MB, written on every update). Otherwise they are kept in RAM and must be downloaded again after a reboot."
+msgstr "Bewaar de regels in <code>%s/rules</code> op flash zodat ze een herstart overleven (enkele MB, bij elke update opnieuw geschreven). Anders staan ze in het RAM en moeten ze na een herstart opnieuw worden gedownload."
+
+msgid "Keep backup of previous rules"
+msgstr "Back-up van vorige regels bewaren"
+
+msgid "Move the previous rules to <code>%s/old.rules</code> before installing new ones."
+msgstr "Verplaats de vorige regels naar <code>%s/old.rules</code> voordat nieuwe worden geïnstalleerd."
+
+msgid "Automatic update"
+msgstr "Automatisch bijwerken"
+
+msgid "Download new rules on a schedule (via cron). With rules in RAM this also restores them after a reboot at the next scheduled time."
+msgstr "Download volgens schema nieuwe regels (via cron). Met regels in het RAM worden ze zo na een herstart ook op het volgende geplande tijdstip hersteld."
+
+msgid "disabled"
+msgstr "uitgeschakeld"
+
+msgid "daily"
+msgstr "dagelijks"
+
+msgid "weekly (Sunday)"
+msgstr "wekelijks (zondag)"
+
+msgid "Update time"
+msgstr "Tijdstip van update"
+
+msgid "Restart Snort after update"
+msgstr "Snort herstarten na update"
+
+msgid "Restart a running Snort after an automatic update (only when the configuration test succeeds)."
+msgstr "Herstart een actieve Snort na een automatische update (alleen als de configuratietest slaagt)."
+
+msgid "Rule categories"
+msgstr "Regelcategorieën"
+
+msgid "Disabled rules"
+msgstr "Uitgeschakelde regels"
+
+msgid "Individual rules that are switched off, as <code>gid:sid</code>. Rules can also be disabled from the Alerts and Statistics pages."
+msgstr "Afzonderlijke regels die zijn uitgeschakeld, als <code>gid:sid</code>. Regels kunnen ook vanaf de pagina's Alerts en Statistieken worden uitgeschakeld."
+
+msgid "Expecting gid:sid, e.g. 1:2018959"
+msgstr "Verwacht gid:sid, bijv. 1:2018959"
+
+msgid "Expecting a network, a list like [192.168.1.0/24, fd00::/64] or \"any\""
+msgstr "Verwacht een netwerk, een lijst zoals [192.168.1.0/24, fd00::/64] of \"any\""
+
+msgid "Invalid characters; allowed are addresses, prefixes, \"any\", \"!\", \"$VARIABLES\", commas and brackets"
+msgstr "Ongeldige tekens; toegestaan zijn adressen, prefixen, \"any\", \"!\", \"$VARIABELEN\", komma's en haken"
+
+msgid "Unbalanced brackets"
+msgstr "Haken zijn niet in balans"
+
+msgid "Snort IDS – Settings"
+msgstr "Snort IDS – Instellingen"
+
+msgid "Configuration of the Snort 3 service. In <em>managed</em> mode the Snort configuration is generated from these settings by <code>snort-mgr</code>; in <em>manual</em> mode Snort runs your own <code>snort.lua</code>."
+msgstr "Configuratie van de Snort 3-dienst. In de <em>beheerde</em> modus genereert <code>snort-mgr</code> de Snort-configuratie uit deze instellingen; in de <em>handmatige</em> modus draait Snort je eigen <code>snort.lua</code>."
+
+msgid "General"
+msgstr "Algemeen"
+
+msgid "Networks"
+msgstr "Netwerken"
+
+msgid "Detection"
+msgstr "Detectie"
+
+msgid "Inspection"
+msgstr "Inspectie"
+
+msgid "Inline (NFQ)"
+msgstr "Inline (NFQ)"
+
+msgid "Logging & storage"
+msgstr "Logging & opslag"
+
+msgid "Advanced"
+msgstr "Geavanceerd"
+
+msgid "Enable Snort"
+msgstr "Snort inschakelen"
+
+msgid "Start Snort at boot and when the configuration is applied."
+msgstr "Start Snort bij het opstarten en wanneer de configuratie wordt toegepast."
+
+msgid "<strong>Managed</strong>: LuCI generates the complete configuration, including custom rules and suppressions. <strong>Manual</strong>: only interface and configuration directory are used; you maintain <code>snort.lua</code> yourself (legacy behaviour)."
+msgstr "<strong>Beheerd</strong>: LuCI genereert de volledige configuratie, inclusief eigen regels en onderdrukkingen. <strong>Handmatig</strong>: alleen interface en configuratiemap worden gebruikt; je onderhoudt <code>snort.lua</code> zelf (oude werkwijze)."
+
+msgid "Managed by LuCI (recommended)"
+msgstr "Beheerd door LuCI (aanbevolen)"
+
+msgid "Manual – use own snort.lua"
+msgstr "Handmatig – eigen snort.lua gebruiken"
+
+msgid "Network device Snort listens on. For IDS this is usually the WAN device (%s). For afpacket inline mode enter a device pair like <code>eth0:eth1</code>."
+msgstr "Netwerkapparaat waarop Snort luistert. Voor IDS is dit meestal het WAN-apparaat (%s). Voor afpacket-inlinemodus geef je een paar op zoals <code>eth0:eth1</code>."
+
+msgid "<strong>IDS</strong> only detects and logs. <strong>IPS</strong> runs inline and can drop traffic; this requires the NFQ (or afpacket) DAQ and the rules' (or overridden) action."
+msgstr "<strong>IDS</strong> detecteert en logt alleen. <strong>IPS</strong> draait inline en kan verkeer laten vallen; dit vereist de NFQ- (of afpacket-)DAQ en de actie uit de regels (of de override)."
+
+msgid "Home network (HOME_NET)"
+msgstr "Thuisnetwerk (HOME_NET)"
+
+msgid "Address range(s) to protect, usually your LAN. Multiple ranges as a list in brackets, e.g. <code>[192.168.1.0/24, fd00::/64]</code>."
+msgstr "Te beschermen adresbereik(en), meestal je LAN. Meerdere bereiken als lijst tussen haken, bijv. <code>[192.168.1.0/24, fd00::/64]</code>."
+
+msgid "All local networks: %s"
+msgstr "Alle lokale netwerken: %s"
+
+msgid "any"
+msgstr "any"
+
+msgid "External network (EXTERNAL_NET)"
+msgstr "Extern netwerk (EXTERNAL_NET)"
+
+msgid "Addresses considered external. <code>any</code> is the safe default; <code>!$HOME_NET</code> ignores attacks between local hosts."
+msgstr "Adressen die als extern gelden. <code>any</code> is de veilige standaard; <code>!$HOME_NET</code> negeert aanvallen tussen lokale hosts."
+
+msgid "!$HOME_NET – everything except the home network"
+msgstr "!$HOME_NET – alles behalve het thuisnetwerk"
+
+msgid "<strong>afpacket</strong>: fast, recommended for IDS. <strong>pcap</strong>: most compatible, but alerts may only be written in batches. <strong>nfq</strong>: netfilter queue, required for IPS; traffic is sent to Snort through nftables rules."
+msgstr "<strong>afpacket</strong>: snel, aanbevolen voor IDS. <strong>pcap</strong>: meest compatibel, maar alerts worden mogelijk in batches geschreven. <strong>nfq</strong>: netfilter-queue, vereist voor IPS; verkeer gaat via nftables-regels naar Snort."
+
+msgid "nfq (netfilter queue)"
+msgstr "nfq (netfilter-queue)"
+
+msgid "IPS mode requires the nfq or afpacket DAQ"
+msgstr "IPS-modus vereist de nfq- of afpacket-DAQ"
+
+msgid "DAQ module \"%s\" is not installed"
+msgstr "DAQ-module \"%s\" is niet geïnstalleerd"
+
+msgid "Rule action override"
+msgstr "Actie van regels overschrijven"
+
+msgid "Override the action of every rule. <em>default</em> keeps the action defined in each rule. In IDS mode blocking actions are only logged (would_drop)."
+msgstr "Overschrijf de actie van elke regel. <em>default</em> behoudt de actie uit elke regel. In IDS-modus worden blokkerende acties alleen gelogd (would_drop)."
+
+msgid "default – use the rule's action"
+msgstr "default – actie uit de regel gebruiken"
+
+msgid "alert – only log"
+msgstr "alert – alleen loggen"
+
+msgid "block – drop packet and flow"
+msgstr "block – pakket en verbinding blokkeren"
+
+msgid "drop – drop the packet"
+msgstr "drop – pakket laten vallen"
+
+msgid "reject – drop and send reset/unreachable"
+msgstr "reject – laten vallen en reset/unreachable sturen"
+
+msgid "Snap length"
+msgstr "Snaplengte"
+
+msgid "Maximum number of bytes captured per packet (1518 – 65535)."
+msgstr "Maximaal aantal bytes dat per pakket wordt vastgelegd (1518 – 65535)."
+
+msgid "OpenAppID"
+msgstr "OpenAppID"
+
+msgid "Enable application identification with the OpenAppID detectors."
+msgstr "Applicatie-identificatie met de OpenAppID-detectors inschakelen."
+
+msgid "Not available – install the <code>openappid</code> package for application identification."
+msgstr "Niet beschikbaar – installeer het pakket <code>openappid</code> voor applicatie-identificatie."
+
+msgid "These settings are only used with the <strong>nfq</strong> DAQ. Snort creates an nftables table <code>inet snort</code> that sends packets to the queues below."
+msgstr "Deze instellingen worden alleen gebruikt met de <strong>nfq</strong>-DAQ. Snort maakt een nftables-tabel <code>inet snort</code> aan die pakketten naar onderstaande queues stuurt."
+
+msgid "Chain hook"
+msgstr "Chain-hook"
+
+msgid "Where traffic is queued. <strong>forward</strong> inspects routed traffic between LAN and WAN, <strong>input</strong>/<strong>output</strong> only traffic to/from the router itself."
+msgstr "Waar verkeer in de queue wordt gezet. <strong>forward</strong> inspecteert gerouteerd verkeer tussen LAN en WAN, <strong>input</strong>/<strong>output</strong> alleen verkeer van/naar de router zelf."
+
+msgid "Chain priority"
+msgstr "Chain-prioriteit"
+
+msgid "First queue number"
+msgstr "Eerste queuenummer"
+
+msgid "Number of queues"
+msgstr "Aantal queues"
+
+msgid "Usually 2 – 8, one per packet thread."
+msgstr "Meestal 2 – 8, één per pakketthread."
+
+msgid "Queue length"
+msgstr "Queuelengte"
+
+msgid "Packet threads"
+msgstr "Pakketthreads"
+
+msgid "0 = one per CPU core."
+msgstr "0 = één per CPU-kern."
+
+msgid "Fanout type"
+msgstr "Fanout-type"
+
+msgid "Kernel load balancing over the queues."
+msgstr "Lastverdeling door de kernel over de queues."
+
+msgid "Extra nftables include"
+msgstr "Extra nftables-include"
+
+msgid "Optional file with additional nftables statements inserted in the queue chain (e.g. to exclude traffic)."
+msgstr "Optioneel bestand met extra nftables-statements die in de queue-chain worden ingevoegd (bijv. om verkeer uit te sluiten)."
+
+msgid "Log alerts to file"
+msgstr "Alerts naar bestand loggen"
+
+msgid "Write alerts as JSON to <code>alert_json.txt</code> in the log directory. Required for the Alerts page and statistics."
+msgstr "Schrijf alerts als JSON naar <code>alert_json.txt</code> in de logmap. Vereist voor de pagina Alerts en de statistieken."
+
+msgid "Log directory"
+msgstr "Logmap"
+
+msgid "The default <code>/var/log</code> is in RAM; alerts are lost on reboot. A directory on USB storage keeps them, but avoid the internal flash."
+msgstr "De standaardmap <code>/var/log</code> staat in het RAM; alerts gaan verloren bij een herstart. Een map op USB-opslag bewaart ze, maar vermijd het interne flashgeheugen."
+
+msgid "Working directory"
+msgstr "Werkmap"
+
+msgid "Generated configuration and downloaded rules (when not stored persistently)."
+msgstr "Gegenereerde configuratie en gedownloade regels (als ze niet permanent worden opgeslagen)."
+
+msgid "Configuration directory"
+msgstr "Configuratiemap"
+
+msgid "Location of <code>snort.lua</code>, <code>snort_defaults.lua</code> and the <code>rules</code> directory."
+msgstr "Locatie van <code>snort.lua</code>, <code>snort_defaults.lua</code> en de map <code>rules</code>."
+
+msgid "Restart on configuration change"
+msgstr "Herstarten bij configuratiewijziging"
+
+msgid "Snort's init script regenerates the configuration on changes but does not restart the running daemon. When enabled, LuCI restarts Snort after you apply changes (also for custom rules and suppressions)."
+msgstr "Het init-script van Snort genereert bij wijzigingen de configuratie opnieuw, maar herstart de draaiende daemon niet. Indien ingeschakeld herstart LuCI Snort nadat je wijzigingen hebt toegepast (ook voor eigen regels en onderdrukkingen)."
+
+msgid "Additional include"
+msgstr "Extra include"
+
+msgid "Optional ucode template / Lua snippet appended to the generated <code>snort.lua</code> (after custom rules and suppressions). The variables <code>snort</code> and <code>nfq</code> are available."
+msgstr "Optioneel ucode-template / Lua-fragment dat achter de gegenereerde <code>snort.lua</code> wordt geplakt (na eigen regels en onderdrukkingen). De variabelen <code>snort</code> en <code>nfq</code> zijn beschikbaar."
+
+msgid "Detection policy"
+msgstr "Detectiebeleid"
+
+msgid "Talos tuning profile applied on top of <code>snort.lua</code> (inspector depths, decompression, PCRE limits). <em>Connectivity</em> is fastest, <em>Max detect</em> finds most but is slowest and noisiest."
+msgstr "Talos-afstemprofiel bovenop <code>snort.lua</code> (inspectiediepte, decompressie, PCRE-limieten). <em>Connectivity</em> is het snelst, <em>Max detect</em> vindt het meest maar is het traagst en luidruchtigst."
+
+msgid "Default (snort.lua as is)"
+msgstr "Standaard (snort.lua ongewijzigd)"
+
+msgid "Connectivity – performance first"
+msgstr "Connectivity – prestaties eerst"
+
+msgid "Balanced – recommended"
+msgstr "Balanced – aanbevolen"
+
+msgid "Security – more inspection"
+msgstr "Security – meer inspectie"
+
+msgid "Maximum detection – testing/lab"
+msgstr "Maximale detectie – test/lab"
+
+msgid "Port scan detection"
+msgstr "Portscandetectie"
+
+msgid "Detect TCP/UDP/ICMP port scans and sweeps (generator 122). Without this option Snort tracks scans but never reports them."
+msgstr "Detecteer TCP/UDP/ICMP-portscans en -sweeps (generator 122). Zonder deze optie houdt Snort scans wel bij maar meldt ze nooit."
+
+msgid "Port scan sensitivity"
+msgstr "Gevoeligheid portscan"
+
+msgid "<em>Low</em> only reports scans with negative responses (few false positives); <em>High</em> also catches slow scans but needs tuning."
+msgstr "<em>Laag</em> meldt alleen scans met negatieve antwoorden (weinig valse meldingen); <em>Hoog</em> vangt ook trage scans maar vraagt om tuning."
+
+msgid "low"
+msgstr "laag"
+
+msgid "medium"
+msgstr "middel"
+
+msgid "high"
+msgstr "hoog"
+
+msgid "Ignore scanners"
+msgstr "Scanners negeren"
+
+msgid "Hosts allowed to scan, e.g. your monitoring server or vulnerability scanner."
+msgstr "Hosts die mogen scannen, bijv. je monitoringserver of kwetsbaarheidsscanner."
+
+msgid "IP reputation (blocklist)"
+msgstr "IP-reputatie (blokkeerlijst)"
+
+msgid "Alert on (IDS) or block (IPS) traffic from/to listed addresses before any rule is evaluated (generator 136)."
+msgstr "Alarmeer (IDS) of blokkeer (IPS) verkeer van/naar vermelde adressen voordat een regel wordt geëvalueerd (generator 136)."
+
+msgid "Blocked addresses"
+msgstr "Geblokkeerde adressen"
+
+msgid "Blocklist file"
+msgstr "Blokkeerlijstbestand"
+
+msgid "Optional file with one address or prefix per line, e.g. a downloaded threat feed."
+msgstr "Optioneel bestand met één adres of prefix per regel, bijv. een gedownloade threat feed."
+
+msgid "Trusted addresses"
+msgstr "Vertrouwde adressen"
+
+msgid "Never blocked by reputation."
+msgstr "Nooit geblokkeerd door reputatie."
+
+msgid "Check private addresses"
+msgstr "Privéadressen controleren"
+
+msgid "Also apply the lists to RFC 1918 addresses."
+msgstr "Pas de lijsten ook toe op RFC 1918-adressen."
+
+msgid "Decoder and inspector alerts"
+msgstr "Decoder- en inspectoralerts"
+
+msgid "Report all built-in events (malformed packets, protocol anomalies, stream issues, …). Useful for analysis, but can be very noisy."
+msgstr "Meld alle ingebouwde gebeurtenissen (misvormde pakketten, protocolafwijkingen, streamproblemen, …). Nuttig voor analyse, maar kan erg luidruchtig zijn."
+
+msgid "Performance monitoring"
+msgstr "Prestatiemonitoring"
+
+msgid "Record throughput, packet drops and CPU usage (perf_monitor) for the Statistics page."
+msgstr "Leg doorvoer, verloren pakketten en CPU-gebruik vast (perf_monitor) voor de pagina Statistieken."
+
+msgid "Sample interval"
+msgstr "Meetinterval"
+
+msgid "30 seconds"
+msgstr "30 seconden"
+
+msgid "1 minute"
+msgstr "1 minuut"
+
+msgid "5 minutes"
+msgstr "5 minuten"
+
+msgid "Maximum alert log size"
+msgstr "Maximale grootte alertlog"
+
+msgid "In MB. When reached Snort starts a new file and only one older file is kept, so RAM usage stays bounded. 0 = unlimited."
+msgstr "In MB. Bij het bereiken begint Snort een nieuw bestand en blijft slechts één ouder bestand bewaard, zodat het RAM-gebruik begrensd blijft. 0 = onbeperkt."
+
+msgid "Verify checksums"
+msgstr "Checksums controleren"
+
+msgid "Disable when the router uses checksum offloading and Snort sees locally generated packets with invalid checksums (these are otherwise ignored)."
+msgstr "Uitschakelen als de router checksum-offloading gebruikt en Snort lokaal gegenereerde pakketten met ongeldige checksums ziet (die worden anders genegeerd)."
+
+msgid "Suspend slow rules"
+msgstr "Trage regels pauzeren"
+
+msgid "Temporarily disable rules that repeatedly exceed the time limit, protecting throughput on slow CPUs."
+msgstr "Schakel regels die herhaaldelijk de tijdslimiet overschrijden tijdelijk uit, om de doorvoer op trage CPU's te beschermen."
+
+msgid "Rule time limit"
+msgstr "Tijdslimiet per regel"
+
+msgid "Microseconds per packet."
+msgstr "Microseconden per pakket."
+
+msgid "Generated configuration"
+msgstr "Gegenereerde configuratie"
+
+msgid "Show snort.lua"
+msgstr "Toon snort.lua"
+
+msgid "Last 30 days"
+msgstr "Afgelopen 30 dagen"
+
+msgid "All logged alerts"
+msgstr "Alle gelogde alerts"
+
+msgid "Mon"
+msgstr "ma"
+
+msgid "Tue"
+msgstr "di"
+
+msgid "Wed"
+msgstr "wo"
+
+msgid "Thu"
+msgstr "do"
+
+msgid "Fri"
+msgstr "vr"
+
+msgid "Sat"
+msgstr "za"
+
+msgid "Sun"
+msgstr "zo"
+
+msgid "≈ %s per day"
+msgstr "≈ %s per dag"
+
+msgid "High priority"
+msgstr "Hoge prioriteit"
+
+msgid "%s of all alerts"
+msgstr "%s van alle alerts"
+
+msgid "Rules that fired"
+msgstr "Getriggerde regels"
+
+msgid "%s of %s loaded rules"
+msgstr "%s van %s geladen regels"
+
+msgid "Share of the loaded rules that produced at least one alert in this period"
+msgstr "Aandeel van de geladen regels dat in deze periode minstens één alert gaf"
+
+msgid "%s destinations"
+msgstr "%s bestemmingen"
+
+msgid "Blocked / would block"
+msgstr "Geblokkeerd / zou blokkeren"
+
+msgid "No alerts in this period."
+msgstr "Geen alerts in deze periode."
+
+msgid "Show as table"
+msgstr "Toon als tabel"
+
+msgid "Period"
+msgstr "Periode"
+
+msgid "Too few different rules fired for this analysis."
+msgstr "Te weinig verschillende regels getriggerd voor deze analyse."
+
+msgid "Share of all alerts"
+msgstr "Aandeel van alle alerts"
+
+msgid "Top %d rule(s)"
+msgstr "Top %d regel(s)"
+
+msgid "%d of %d rules (%s) cause 80%% of all alerts."
+msgstr "%d van %d regels (%s) veroorzaken 80%% van alle alerts."
+
+msgid "A steep curve means a few noisy rules dominate: tuning (suppressing, filtering or disabling) just those rules removes most of the noise."
+msgstr "Een steile curve betekent dat enkele luidruchtige regels domineren: alleen die regels afstemmen (onderdrukken, filteren of uitschakelen) haalt het grootste deel van de ruis weg."
+
+msgid "Rules ranked by number of alerts →"
+msgstr "Regels gerangschikt naar aantal alerts →"
+
+msgid "noisy"
+msgstr "luidruchtig"
+
+msgid "%.0f%% of alerts, one host pair"
+msgstr "%.0f%% van de alerts, één hostpaar"
+
+msgid "dominant"
+msgstr "dominant"
+
+msgid "%.0f%% of all alerts"
+msgstr "%.0f%% van alle alerts"
+
+msgid "widespread"
+msgstr "wijdverbreid"
+
+msgid "seen from %d sources"
+msgstr "gezien vanaf %d bronnen"
+
+msgid "priority %s"
+msgstr "prioriteit %s"
+
+msgid "Trend over the selected period"
+msgstr "Trend over de gekozen periode"
+
+msgid "Suppress all alerts of this rule"
+msgstr "Alle alerts van deze regel onderdrukken"
+
+msgid "Suppress"
+msgstr "Onderdrukken"
+
+msgid "Disable the rule so it is no longer evaluated"
+msgstr "Schakel de regel uit zodat hij niet meer wordt geëvalueerd"
+
+msgid "Disable"
+msgstr "Uitschakelen"
+
+msgid "Trend"
+msgstr "Trend"
+
+msgid "Distinct source → destination addresses"
+msgstr "Unieke bron- → bestemmingsadressen"
+
+msgid "Hosts"
+msgstr "Hosts"
+
+msgid "Tuning"
+msgstr "Tuning"
+
+msgid "Showing the 25 most frequent of %d rules."
+msgstr "De 25 meest voorkomende van %d regels worden getoond."
+
+msgid "Rules loaded"
+msgstr "Regels geladen"
+
+msgid "Categories can be disabled completely on the"
+msgstr "Categorieën kunnen volledig worden uitgeschakeld op de"
+
+msgid "Rules page"
+msgstr "pagina Regels"
+
+msgid "Categories"
+msgstr "Categorieën"
+
+msgid "Classification"
+msgstr "Classificatie"
+
+msgid "No classification in the logged alerts (older alerts or rules without classtype)."
+msgstr "Geen classificatie in de gelogde alerts (oudere alerts of regels zonder classtype)."
+
+msgid "Destination ports"
+msgstr "Bestemmingspoorten"
+
+msgid "Services (application protocols)"
+msgstr "Diensten (applicatieprotocollen)"
+
+msgid "No service detected."
+msgstr "Geen dienst gedetecteerd."
+
+msgid "Protocols"
+msgstr "Protocollen"
+
+msgid "Actions"
+msgstr "Acties"
+
+msgid "No performance samples yet; the first sample is written after one interval."
+msgstr "Nog geen prestatiemetingen; de eerste meting wordt na één interval geschreven."
+
+msgid "Performance monitoring is disabled."
+msgstr "Prestatiemonitoring is uitgeschakeld."
+
+msgid "Enable in Settings → Advanced"
+msgstr "Inschakelen bij Instellingen → Geavanceerd"
+
+msgid "Packets received"
+msgstr "Pakketten ontvangen"
+
+msgid "in %d samples"
+msgstr "in %d metingen"
+
+msgid "Packets dropped"
+msgstr "Pakketten verloren"
+
+msgid "Snort cannot keep up"
+msgstr "Snort kan het niet bijhouden"
+
+msgid "occasional drops"
+msgstr "af en toe verlies"
+
+msgid "no drops"
+msgstr "geen verlies"
+
+msgid "Alerts per 10,000 packets"
+msgstr "Alerts per 10.000 pakketten"
+
+msgid "Detection ratio: how often inspected traffic matches a rule"
+msgstr "Detectieratio: hoe vaak geïnspecteerd verkeer op een regel matcht"
+
+msgid "Average CPU (Snort threads)"
+msgstr "Gemiddelde CPU (Snort-threads)"
+
+msgid "Rule time-outs"
+msgstr "Regel-time-outs"
+
+msgid "slow rules hit the latency limit"
+msgstr "trage regels raakten de latentielimiet"
+
+msgid "Throughput"
+msgstr "Doorvoer"
+
+msgid "Traffic inspected by Snort."
+msgstr "Door Snort geïnspecteerd verkeer."
+
+msgid "Mbit/s"
+msgstr "Mbit/s"
+
+msgid "Packets per second"
+msgstr "Pakketten per seconde"
+
+msgid "packets/s"
+msgstr "pakketten/s"
+
+msgid "Packet drop rate"
+msgstr "Pakketverlies"
+
+msgid "Packets the DAQ had to drop because Snort was too slow. Should stay at 0%."
+msgstr "Pakketten die de DAQ moest laten vallen omdat Snort te traag was. Hoort op 0% te blijven."
+
+msgid "dropped"
+msgstr "verloren"
+
+msgid "CPU usage"
+msgstr "CPU-gebruik"
+
+msgid "Snort packet threads, percentage of one core."
+msgstr "Snort-pakketthreads, percentage van één kern."
+
+msgid "CPU"
+msgstr "CPU"
+
+msgid "Alerts per minute"
+msgstr "Alerts per minuut"
+
+msgid "alerts/min"
+msgstr "alerts/min"
+
+msgid "New flows per second"
+msgstr "Nieuwe verbindingen per seconde"
+
+msgid "Connections tracked by the stream inspector."
+msgstr "Verbindingen gevolgd door de stream-inspector."
+
+msgid "flows/s"
+msgstr "verbindingen/s"
+
+msgid "Alert logging is disabled, statistics stay empty."
+msgstr "Alertlogging is uitgeschakeld; de statistieken blijven leeg."
+
+msgid "Summary"
+msgstr "Samenvatting"
+
+msgid "Alerts over time"
+msgstr "Alerts in de tijd"
+
+msgid "Stacked by rule priority (from the rule's classtype). Hover a column for details."
+msgstr "Gestapeld per regelprioriteit (uit de classtype van de regel). Beweeg over een kolom voor details."
+
+msgid "Activity by weekday and hour"
+msgstr "Activiteit per weekdag en uur"
+
+msgid "Reveals patterns such as nightly scans or alerts during office hours."
+msgstr "Toont patronen zoals nachtelijke scans of alerts tijdens kantooruren."
+
+msgid "Rule effectiveness"
+msgstr "Effectiviteit van regels"
+
+msgid "Which rules generate the alerts, whether they are spread over many hosts or repeat between one host pair (often a false positive), and how they trend."
+msgstr "Welke regels de alerts veroorzaken, of ze over veel hosts verspreid zijn of zich herhalen tussen één hostpaar (vaak een valse melding), en hoe ze zich ontwikkelen."
+
+msgid "Alerts per category compared with the number of loaded rules in that category."
+msgstr "Alerts per categorie vergeleken met het aantal geladen regels in die categorie."
+
+msgid "Breakdown"
+msgstr "Uitsplitsing"
+
+msgid "Snort performance"
+msgstr "Snort-prestaties"
+
+msgid "From Snort's perf_monitor: how much traffic is inspected and whether Snort keeps up with it."
+msgstr "Uit Snorts perf_monitor: hoeveel verkeer wordt geïnspecteerd en of Snort het bijhoudt."
+
+msgid "Snort IDS – Statistics"
+msgstr "Snort IDS – Statistieken"
+
+msgid "Insight into what Snort detects, how effective the rules are and how well Snort performs. Statistics are based on the logged alerts (at most the last 50,000) and Snort's performance monitor."
+msgstr "Inzicht in wat Snort detecteert, hoe effectief de regels zijn en hoe goed Snort presteert. De statistieken zijn gebaseerd op de gelogde alerts (maximaal de laatste 50.000) en Snorts prestatiemonitor."
+
+msgid "An address is required when tracking by source or destination"
+msgstr "Bij volgen op bron of bestemming is een adres vereist"
+
+msgid "Expecting an address, prefix or [list, of, addresses]"
+msgstr "Verwacht een adres, prefix of [lijst, van, adressen]"
+
+msgid "Snort IDS – Tuning"
+msgstr "Snort IDS – Tuning"
+
+msgid "Reduce noise without editing the rule set. <strong>Suppressions</strong> silence a rule completely or for certain addresses (false positives). <strong>Event filters</strong> limit how often an alert is logged. <strong>Rate filters</strong> (IPS) switch a rule to another action when it fires too often, e.g. to block brute-force attempts. Rules that are not needed at all can be disabled on the Rules page."
+msgstr "Verminder ruis zonder de regelset aan te passen. <strong>Onderdrukkingen</strong> leggen een regel volledig of voor bepaalde adressen het zwijgen op (valse meldingen). <strong>Eventfilters</strong> beperken hoe vaak een alert wordt gelogd. <strong>Ratefilters</strong> (IPS) zetten een regel om naar een andere actie als hij te vaak afgaat, bijv. om brute-force-pogingen te blokkeren. Regels die helemaal niet nodig zijn, kun je uitschakelen op de pagina Regels."
+
+msgid "Suppression list"
+msgstr "Onderdrukkingslijst"
+
+msgid "Add suppression"
+msgstr "Onderdrukking toevoegen"
+
+msgid "GID"
+msgstr "GID"
+
+msgid "Generator ID, 1 for normal text rules."
+msgstr "Generator-ID, 1 voor normale tekstregels."
+
+msgid "SID"
+msgstr "SID"
+
+msgid "Signature ID of the rule."
+msgstr "Signature-ID van de regel."
+
+msgid "Scope"
+msgstr "Bereik"
+
+msgid "all traffic"
+msgstr "al het verkeer"
+
+msgid "only from source address"
+msgstr "alleen vanaf bronadres"
+
+msgid "only to destination address"
+msgstr "alleen naar bestemmingsadres"
+
+msgid "source %s"
+msgstr "bron %s"
+
+msgid "destination %s"
+msgstr "bestemming %s"
+
+msgid "IP address, prefix or a list like [10.0.0.1, 10.0.0.2]."
+msgstr "IP-adres, prefix of een lijst zoals [10.0.0.1, 10.0.0.2]."
+
+msgid "Comment"
+msgstr "Opmerking"
+
+msgid "e.g. rule message or reason"
+msgstr "bijv. regelmelding of reden"
+
+msgid "Event filters"
+msgstr "Eventfilters"
+
+msgid "<em>limit</em>: log at most <em>count</em> alerts per interval · <em>threshold</em>: log every <em>count</em>-th alert · <em>both</em>: log once per interval after <em>count</em> alerts. The rule is still evaluated (and can still block in IPS mode)."
+msgstr "<em>limit</em>: log hoogstens <em>aantal</em> alerts per interval · <em>threshold</em>: log elke <em>aantal</em>-ste alert · <em>both</em>: log één keer per interval na <em>aantal</em> alerts. De regel wordt nog steeds geëvalueerd (en kan in IPS-modus nog blokkeren)."
+
+msgid "Add event filter"
+msgstr "Eventfilter toevoegen"
+
+msgid "0 applies the filter to all rules of the generator."
+msgstr "0 past het filter toe op alle regels van de generator."
+
+msgid "Type"
+msgstr "Type"
+
+msgid "limit"
+msgstr "limit"
+
+msgid "threshold"
+msgstr "threshold"
+
+msgid "both"
+msgstr "both"
+
+msgid "Count per"
+msgstr "Tellen per"
+
+msgid "source address"
+msgstr "bronadres"
+
+msgid "destination address"
+msgstr "bestemmingsadres"
+
+msgid "Interval (s)"
+msgstr "Interval (s)"
+
+msgid "Only for address"
+msgstr "Alleen voor adres"
+
+msgid "Rate filters"
+msgstr "Ratefilters"
+
+msgid "When a rule fires more than <em>count</em> times within the interval, use the new action for the timeout period. Blocking actions only have effect in IPS mode."
+msgstr "Als een regel binnen het interval vaker dan <em>aantal</em> keer afgaat, wordt de nieuwe actie gebruikt gedurende de time-out. Blokkerende acties werken alleen in IPS-modus."
+
+msgid "Add rate filter"
+msgstr "Ratefilter toevoegen"
+
+msgid "rule"
+msgstr "regel"
+
+msgid "New action"
+msgstr "Nieuwe actie"
+
+msgid "Timeout (s)"
+msgstr "Time-out (s)"
+
+msgid "Overview"
+msgstr "Overzicht"
+
+msgid "Statistics"
+msgstr "Statistieken"
+
+msgid "Settings"
+msgstr "Instellingen"
+
+msgid "Custom Rules"
+msgstr "Eigen regels"
+
+msgid "System Log"
+msgstr "Systeemlog"
+
+msgid "Grant access to LuCI app for Snort IDS"
+msgstr "Toegang verlenen tot de LuCI-app voor Snort IDS"

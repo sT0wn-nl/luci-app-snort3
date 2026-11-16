@@ -1,37 +1,58 @@
 {
-	"admin/services/snort3": {
-		"title": "Snort IDS/IPS",
+	"admin/services/snort": {
+		"title": "Snort IDS",
 		"order": 60,
 		"action": {
-			"type": "firstchild"
+			"type": "alias",
+			"path": "admin/services/snort/overview"
 		},
 		"depends": {
-			"acl": ["luci-app-snort3"],
+			"acl": [ "luci-app-snort3" ],
+			"fs": {
+				"/usr/bin/snort": "executable",
+				"/usr/bin/snort-mgr": "executable"
+			},
 			"uci": { "snort": true }
 		}
 	},
-	"admin/services/snort3/status": {
-		"title": "Status",
-		"order": 1,
-		"action": {
-			"type": "view",
-			"path": "snort3/status"
-		}
+	"admin/services/snort/overview": {
+		"title": "Overview",
+		"order": 10,
+		"action": { "type": "view", "path": "snort/overview" }
 	},
-	"admin/services/snort3/config": {
-		"title": "Configuration",
-		"order": 2,
-		"action": {
-			"type": "view",
-			"path": "snort3/config"
-		}
+	"admin/services/snort/statistics": {
+		"title": "Statistics",
+		"order": 15,
+		"action": { "type": "view", "path": "snort/statistics" }
 	},
-	"admin/services/snort3/alerts": {
+	"admin/services/snort/settings": {
+		"title": "Settings",
+		"order": 20,
+		"action": { "type": "view", "path": "snort/settings" }
+	},
+	"admin/services/snort/rules": {
+		"title": "Rules",
+		"order": 30,
+		"action": { "type": "view", "path": "snort/rules" }
+	},
+	"admin/services/snort/localrules": {
+		"title": "Custom Rules",
+		"order": 40,
+		"action": { "type": "view", "path": "snort/localrules" }
+	},
+	"admin/services/snort/suppress": {
+		"title": "Tuning",
+		"order": 50,
+		"action": { "type": "view", "path": "snort/suppress" }
+	},
+	"admin/services/snort/alerts": {
 		"title": "Alerts",
-		"order": 3,
-		"action": {
-			"type": "view",
-			"path": "snort3/alerts"
-		}
+		"order": 60,
+		"action": { "type": "view", "path": "snort/alerts" }
+	},
+	"admin/services/snort/log": {
+		"title": "System Log",
+		"order": 70,
+		"action": { "type": "view", "path": "snort/log" }
 	}
 }

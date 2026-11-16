@@ -1,0 +1,23 @@
+#!/bin/sh /etc/rc.common
+# SPDX-License-Identifier: Apache-2.0
+#
+# Companion service of luci-app-snort.  It runs no daemon; it only reacts to
+# changes of /etc/config/snort to (re)write the rule auto-update cron entry
+# and to restart Snort so that changes made in LuCI take effect.
+
+START=99
+USE_PROCD=1
+
+HELPER=/usr/libexec/luci-snort/helper
+
+start_service() {
+	$HELPER cron-sync
+}
+
+reload_service() {
+	$HELPER apply
+}
+
+service_triggers() {
+	procd_add_reload_trigger "snort"
+}

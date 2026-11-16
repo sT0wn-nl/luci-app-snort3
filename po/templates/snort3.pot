@@ -1,0 +1,1505 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8"
+
+msgid "High (1)"
+msgstr ""
+
+msgid "Medium (2)"
+msgstr ""
+
+msgid "Low (3)"
+msgstr ""
+
+msgid "Unclassified"
+msgstr ""
+
+msgid "Alerts"
+msgstr ""
+
+msgid "Total"
+msgstr ""
+
+msgid "Not enough data yet."
+msgstr ""
+
+msgid "No data."
+msgstr ""
+
+msgid "Share"
+msgstr ""
+
+msgid "fewer"
+msgstr ""
+
+msgid "more"
+msgstr ""
+
+msgid "(max %s per cell)"
+msgstr ""
+
+msgid "This suppression already exists."
+msgstr ""
+
+msgid "Suppression for rule %d:%d added. Use “Save & Apply” (unsaved changes, top right) to activate it."
+msgstr ""
+
+msgid "View suppressions"
+msgstr ""
+
+msgid "Rule %s is already disabled."
+msgstr ""
+
+msgid "Rule %s (%s) will be disabled. Use “Save & Apply” (unsaved changes, top right) to activate it."
+msgstr ""
+
+msgid "View disabled rules"
+msgstr ""
+
+msgid "Open the rule documentation on snort.org"
+msgstr ""
+
+msgid "IPS – inline prevention"
+msgstr ""
+
+msgid "IDS – passive detection"
+msgstr ""
+
+msgid "Snort community rules"
+msgstr ""
+
+msgid "Snort registered/subscriber rules (oinkcode)"
+msgstr ""
+
+msgid "Test rules (ICMP ping only)"
+msgstr ""
+
+msgid "unknown"
+msgstr ""
+
+msgid "Starting Snort…"
+msgstr ""
+
+msgid "Stopping Snort…"
+msgstr ""
+
+msgid "Restarting Snort…"
+msgstr ""
+
+msgid "Enabling Snort at boot…"
+msgstr ""
+
+msgid "Disabling Snort at boot…"
+msgstr ""
+
+msgid "Command \"%s\" failed (exit code %s)."
+msgstr ""
+
+msgid "Run a configuration test from the Overview page for details."
+msgstr ""
+
+msgid "Starting…"
+msgstr ""
+
+msgid "Running, please wait…"
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
+msgid "Unable to start job"
+msgstr ""
+
+msgid "Finished successfully"
+msgstr ""
+
+msgid "Failed (exit code %d)"
+msgstr ""
+
+msgid "Generated Snort configuration"
+msgstr ""
+
+msgid "Generated nftables rules (NFQ)"
+msgstr ""
+
+msgid "Effective UCI configuration incl. defaults"
+msgstr ""
+
+msgid "Loading…"
+msgstr ""
+
+msgid "(empty)"
+msgstr ""
+
+msgid "Manual configuration mode."
+msgstr ""
+
+msgid "Snort is started with its own snort.lua; network, detection and logging settings, custom rules and suppressions from LuCI are not applied."
+msgstr ""
+
+msgid "Change in Settings"
+msgstr ""
+
+msgid "The LuCI include hook is not active (option snort.snort.include was changed). Custom rules and suppressions are not applied."
+msgstr ""
+
+msgid "Time"
+msgstr ""
+
+msgid "Action"
+msgstr ""
+
+msgid "Proto"
+msgstr ""
+
+msgid "Source"
+msgstr ""
+
+msgid "Destination"
+msgstr ""
+
+msgid "Rule"
+msgstr ""
+
+msgid "Message"
+msgstr ""
+
+msgid "No alerts match the filter."
+msgstr ""
+
+msgid "No alerts logged."
+msgstr ""
+
+msgid "Newer"
+msgstr ""
+
+msgid "Page %d of %d"
+msgstr ""
+
+msgid "Older"
+msgstr ""
+
+msgid "(+%d more)"
+msgstr ""
+
+msgid "Count"
+msgstr ""
+
+msgid "Sources"
+msgstr ""
+
+msgid "Destinations"
+msgstr ""
+
+msgid "Last seen"
+msgstr ""
+
+msgid "%d of %d loaded alerts"
+msgstr ""
+
+msgid "Looking up rule…"
+msgstr ""
+
+msgid "Rule text not found in the installed rule files."
+msgstr ""
+
+msgid "Alert details"
+msgstr ""
+
+msgid "Rule documentation on snort.org"
+msgstr ""
+
+msgid "Suppress this alert"
+msgstr ""
+
+msgid "Suppress rule completely"
+msgstr ""
+
+msgid "Only from %s"
+msgstr ""
+
+msgid "Only to %s"
+msgstr ""
+
+msgid "Disable this rule"
+msgstr ""
+
+msgid "A disabled rule is no longer evaluated at all (saves CPU). Prefer suppression if the rule is useful for other hosts."
+msgstr ""
+
+msgid "Disable rule %d:%d"
+msgstr ""
+
+msgid "Clear alert log"
+msgstr ""
+
+msgid "Delete all logged alerts? This cannot be undone."
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Clear"
+msgstr ""
+
+msgid "Search message, IP, port or SID…"
+msgstr ""
+
+msgid "All time"
+msgstr ""
+
+msgid "Last hour"
+msgstr ""
+
+msgid "Last 24 hours"
+msgstr ""
+
+msgid "Last 7 days"
+msgstr ""
+
+msgid "Time range"
+msgstr ""
+
+msgid "All actions"
+msgstr ""
+
+msgid "Show events"
+msgstr ""
+
+msgid "Group by rule"
+msgstr ""
+
+msgid "View"
+msgstr ""
+
+msgid "Last %d"
+msgstr ""
+
+msgid "Number of alerts to load"
+msgstr ""
+
+msgid "Auto refresh"
+msgstr ""
+
+msgid "Refresh"
+msgstr ""
+
+msgid "Export CSV"
+msgstr ""
+
+msgid "Clear log"
+msgstr ""
+
+msgid "Alert logging is disabled in the settings; no new alerts will be shown."
+msgstr ""
+
+msgid "With the pcap DAQ Snort may write alerts in batches, so new alerts can appear with a delay. Use afpacket for near real-time alerts."
+msgstr ""
+
+msgid "Snort IDS – Alerts"
+msgstr ""
+
+msgid "Alerts from %s. Click an alert for details, the matching rule and to suppress false positives."
+msgstr ""
+
+msgid "the alert log"
+msgstr ""
+
+msgid "Line %d: rule without sid"
+msgstr ""
+
+msgid "Line %d: rule does not end with \")\""
+msgstr ""
+
+msgid "Duplicate sid %s"
+msgstr ""
+
+msgid "%d active rule(s)"
+msgstr ""
+
+msgid "Snort IDS – Custom Rules"
+msgstr ""
+
+msgid "Your own Snort rules, loaded in addition to the downloaded rule set. They are stored in <code>%h</code> and kept on sysupgrade. After saving, Snort is restarted when you use “Save & Apply”."
+msgstr ""
+
+msgid "Save & test configuration"
+msgstr ""
+
+msgid "Insert examples"
+msgstr ""
+
+msgid "Rule writing guide"
+msgstr ""
+
+msgid "Quick reference"
+msgstr ""
+
+msgid "Saved with warnings: %s"
+msgstr ""
+
+msgid "Unable to save the custom rules"
+msgstr ""
+
+msgid "Configuration test"
+msgstr ""
+
+msgid "Custom rules saved. Restart Snort to activate them."
+msgstr ""
+
+msgid "Custom rules saved. Snort is not running."
+msgstr ""
+
+msgid "Testing configuration before restart"
+msgstr ""
+
+msgid "Custom rules saved and Snort restarted."
+msgstr ""
+
+msgid "No log entries."
+msgstr ""
+
+msgid "Filter…"
+msgstr ""
+
+msgid "Snort IDS – System Log"
+msgstr ""
+
+msgid "Messages from Snort, snort-rules, snort-mgr and luci-snort in the system log (newest first). Useful when Snort fails to start."
+msgstr ""
+
+msgid "Snort is disabled."
+msgstr ""
+
+msgid "Configure the interface and networks, install a rule set and then enable Snort."
+msgstr ""
+
+msgid "Go to Settings"
+msgstr ""
+
+msgid "The rule set is missing."
+msgstr ""
+
+msgid "The rules were stored in RAM and are gone (e.g. after a reboot). Download them again or enable persistent storage."
+msgstr ""
+
+msgid "Go to Rules"
+msgstr ""
+
+msgid "No rules installed."
+msgstr ""
+
+msgid "Snort cannot detect anything without rules."
+msgstr ""
+
+msgid "Download a rule set"
+msgstr ""
+
+msgid "The rule set is stored in RAM and will be lost after a reboot."
+msgstr ""
+
+msgid "Enable persistent storage or automatic updates"
+msgstr ""
+
+msgid "IPS mode cannot work with the pcap DAQ. Use NFQ (recommended) or afpacket."
+msgstr ""
+
+msgid "Alert logging is disabled, so the Alerts page and statistics stay empty."
+msgstr ""
+
+msgid "Enable in Settings"
+msgstr ""
+
+msgid "Restart required."
+msgstr ""
+
+msgid "The configuration or rules changed after Snort was started."
+msgstr ""
+
+msgid "Restart now"
+msgstr ""
+
+msgid "Running"
+msgstr ""
+
+msgid "Stopped"
+msgstr ""
+
+msgid "Disabled"
+msgstr ""
+
+msgid "Rule update running"
+msgstr ""
+
+msgid "Configuration test running"
+msgstr ""
+
+msgid "%d active rules in %d file(s)"
+msgstr ""
+
+msgid "none"
+msgstr ""
+
+msgid "Service"
+msgstr ""
+
+msgid "Start at boot"
+msgstr ""
+
+msgid "yes"
+msgstr ""
+
+msgid "no"
+msgstr ""
+
+msgid "Snort version"
+msgstr ""
+
+msgid "Process"
+msgstr ""
+
+msgid "PID %d, running for %s, memory %s"
+msgstr ""
+
+msgid "Configuration mode"
+msgstr ""
+
+msgid "Manual (own snort.lua)"
+msgstr ""
+
+msgid "Managed by LuCI"
+msgstr ""
+
+msgid "Operation mode"
+msgstr ""
+
+msgid "Packet capture (DAQ)"
+msgstr ""
+
+msgid "Interface"
+msgstr ""
+
+msgid "Home network"
+msgstr ""
+
+msgid "Rule set"
+msgstr ""
+
+msgid "updated %s"
+msgstr ""
+
+msgid "stored in RAM"
+msgstr ""
+
+msgid "stored in flash"
+msgstr ""
+
+msgid "Custom rules"
+msgstr ""
+
+msgid "%d active"
+msgstr ""
+
+msgid "Alert log"
+msgstr ""
+
+msgid "%s in %d file(s)"
+msgstr ""
+
+msgid "no alert log yet"
+msgstr ""
+
+msgid "Start"
+msgstr ""
+
+msgid "Stop"
+msgstr ""
+
+msgid "Restart"
+msgstr ""
+
+msgid "Disable at boot"
+msgstr ""
+
+msgid "Enable at boot"
+msgstr ""
+
+msgid "Test configuration"
+msgstr ""
+
+msgid "Show generated config"
+msgstr ""
+
+msgid "Show nftables rules"
+msgstr ""
+
+msgid "No alerts have been logged yet."
+msgstr ""
+
+msgid "Alerts in log"
+msgstr ""
+
+msgid "Distinct rules"
+msgstr ""
+
+msgid "Source addresses"
+msgstr ""
+
+msgid "%02d:00 – %d alerts"
+msgstr ""
+
+msgid "Alerts per hour (last 24 hours)"
+msgstr ""
+
+msgid "Top rules"
+msgstr ""
+
+msgid "Top source addresses"
+msgstr ""
+
+msgid "Address"
+msgstr ""
+
+msgid "Top destination addresses"
+msgstr ""
+
+msgid "Snort IDS"
+msgstr ""
+
+msgid "Snort 3 is an open source network intrusion detection and prevention system. It inspects traffic on the selected interface, matches it against a rule set and logs (IDS) or blocks (IPS) suspicious traffic."
+msgstr ""
+
+msgid "Status"
+msgstr ""
+
+msgid "Alert statistics"
+msgstr ""
+
+msgid "More statistics"
+msgstr ""
+
+msgid "Missing (lost after reboot)"
+msgstr ""
+
+msgid "Not installed"
+msgstr ""
+
+msgid "Installed"
+msgstr ""
+
+msgid "%s → %s"
+msgstr ""
+
+msgid "State"
+msgstr ""
+
+msgid "unknown (installed outside LuCI)"
+msgstr ""
+
+msgid "Last update"
+msgstr ""
+
+msgid "Location"
+msgstr ""
+
+msgid "RAM"
+msgstr ""
+
+msgid "flash"
+msgstr ""
+
+msgid "Rules"
+msgstr ""
+
+msgid "%d active, %d disabled (commented out)"
+msgstr ""
+
+msgid "%d active in %s"
+msgstr ""
+
+msgid "Edit"
+msgstr ""
+
+msgid "Rule files (%d)"
+msgstr ""
+
+msgid "File"
+msgstr ""
+
+msgid "Active"
+msgstr ""
+
+msgid "Size"
+msgstr ""
+
+msgid "Modified"
+msgstr ""
+
+msgid "Update running…"
+msgstr ""
+
+msgid "Download / update rules now"
+msgstr ""
+
+msgid "Uses the saved settings below. Save & Apply changes first."
+msgstr ""
+
+msgid "Restart Snort now"
+msgstr ""
+
+msgid "Updating Snort rules"
+msgstr ""
+
+msgid "Install a rule set to manage its categories."
+msgstr ""
+
+msgid "Enabled"
+msgstr ""
+
+msgid "Uncheck a category to disable all its rules (they are not evaluated, saving CPU and memory). The alert columns cover the last 30 days and help to spot noisy categories. Save & Apply to activate."
+msgstr ""
+
+msgid "Category"
+msgstr ""
+
+msgid "Alerts (30 days)"
+msgstr ""
+
+msgid "Rules fired"
+msgstr ""
+
+msgid "Snort IDS – Rules"
+msgstr ""
+
+msgid "Snort needs a rule set to detect anything. The free <em>community</em> rules need no account; the larger <em>registered/subscriber</em> rule sets need an oinkcode from snort.org."
+msgstr ""
+
+msgid "Installed rule set"
+msgstr ""
+
+msgid "Rule source & updates"
+msgstr ""
+
+msgid "Snort community rules (free, ~4,000 rules)"
+msgstr ""
+
+msgid "Test rules (only alerts on ICMP ping, no download)"
+msgstr ""
+
+msgid "Oinkcode"
+msgstr ""
+
+msgid "Personal code from your account at <a href=\"https://www.snort.org/oinkcodes\" target=\"_blank\" rel=\"noreferrer\">snort.org/oinkcodes</a>. Note: the snort3 package downloads the snapshot for a fixed Snort version."
+msgstr ""
+
+msgid "An oinkcode is required for this rule set"
+msgstr ""
+
+msgid "An oinkcode is a 40 character hexadecimal string"
+msgstr ""
+
+msgid "Store rules persistently"
+msgstr ""
+
+msgid "Keep the rules in <code>%s/rules</code> on flash so they survive a reboot (several MB, written on every update). Otherwise they are kept in RAM and must be downloaded again after a reboot."
+msgstr ""
+
+msgid "Keep backup of previous rules"
+msgstr ""
+
+msgid "Move the previous rules to <code>%s/old.rules</code> before installing new ones."
+msgstr ""
+
+msgid "Automatic update"
+msgstr ""
+
+msgid "Download new rules on a schedule (via cron). With rules in RAM this also restores them after a reboot at the next scheduled time."
+msgstr ""
+
+msgid "disabled"
+msgstr ""
+
+msgid "daily"
+msgstr ""
+
+msgid "weekly (Sunday)"
+msgstr ""
+
+msgid "Update time"
+msgstr ""
+
+msgid "Restart Snort after update"
+msgstr ""
+
+msgid "Restart a running Snort after an automatic update (only when the configuration test succeeds)."
+msgstr ""
+
+msgid "Rule categories"
+msgstr ""
+
+msgid "Disabled rules"
+msgstr ""
+
+msgid "Individual rules that are switched off, as <code>gid:sid</code>. Rules can also be disabled from the Alerts and Statistics pages."
+msgstr ""
+
+msgid "Expecting gid:sid, e.g. 1:2018959"
+msgstr ""
+
+msgid "Expecting a network, a list like [192.168.1.0/24, fd00::/64] or \"any\""
+msgstr ""
+
+msgid "Invalid characters; allowed are addresses, prefixes, \"any\", \"!\", \"$VARIABLES\", commas and brackets"
+msgstr ""
+
+msgid "Unbalanced brackets"
+msgstr ""
+
+msgid "Snort IDS – Settings"
+msgstr ""
+
+msgid "Configuration of the Snort 3 service. In <em>managed</em> mode the Snort configuration is generated from these settings by <code>snort-mgr</code>; in <em>manual</em> mode Snort runs your own <code>snort.lua</code>."
+msgstr ""
+
+msgid "General"
+msgstr ""
+
+msgid "Networks"
+msgstr ""
+
+msgid "Detection"
+msgstr ""
+
+msgid "Inspection"
+msgstr ""
+
+msgid "Inline (NFQ)"
+msgstr ""
+
+msgid "Logging & storage"
+msgstr ""
+
+msgid "Advanced"
+msgstr ""
+
+msgid "Enable Snort"
+msgstr ""
+
+msgid "Start Snort at boot and when the configuration is applied."
+msgstr ""
+
+msgid "<strong>Managed</strong>: LuCI generates the complete configuration, including custom rules and suppressions. <strong>Manual</strong>: only interface and configuration directory are used; you maintain <code>snort.lua</code> yourself (legacy behaviour)."
+msgstr ""
+
+msgid "Managed by LuCI (recommended)"
+msgstr ""
+
+msgid "Manual – use own snort.lua"
+msgstr ""
+
+msgid "Network device Snort listens on. For IDS this is usually the WAN device (%s). For afpacket inline mode enter a device pair like <code>eth0:eth1</code>."
+msgstr ""
+
+msgid "<strong>IDS</strong> only detects and logs. <strong>IPS</strong> runs inline and can drop traffic; this requires the NFQ (or afpacket) DAQ and the rules' (or overridden) action."
+msgstr ""
+
+msgid "Home network (HOME_NET)"
+msgstr ""
+
+msgid "Address range(s) to protect, usually your LAN. Multiple ranges as a list in brackets, e.g. <code>[192.168.1.0/24, fd00::/64]</code>."
+msgstr ""
+
+msgid "All local networks: %s"
+msgstr ""
+
+msgid "any"
+msgstr ""
+
+msgid "External network (EXTERNAL_NET)"
+msgstr ""
+
+msgid "Addresses considered external. <code>any</code> is the safe default; <code>!$HOME_NET</code> ignores attacks between local hosts."
+msgstr ""
+
+msgid "!$HOME_NET – everything except the home network"
+msgstr ""
+
+msgid "<strong>afpacket</strong>: fast, recommended for IDS. <strong>pcap</strong>: most compatible, but alerts may only be written in batches. <strong>nfq</strong>: netfilter queue, required for IPS; traffic is sent to Snort through nftables rules."
+msgstr ""
+
+msgid "nfq (netfilter queue)"
+msgstr ""
+
+msgid "IPS mode requires the nfq or afpacket DAQ"
+msgstr ""
+
+msgid "DAQ module \"%s\" is not installed"
+msgstr ""
+
+msgid "Rule action override"
+msgstr ""
+
+msgid "Override the action of every rule. <em>default</em> keeps the action defined in each rule. In IDS mode blocking actions are only logged (would_drop)."
+msgstr ""
+
+msgid "default – use the rule's action"
+msgstr ""
+
+msgid "alert – only log"
+msgstr ""
+
+msgid "block – drop packet and flow"
+msgstr ""
+
+msgid "drop – drop the packet"
+msgstr ""
+
+msgid "reject – drop and send reset/unreachable"
+msgstr ""
+
+msgid "Snap length"
+msgstr ""
+
+msgid "Maximum number of bytes captured per packet (1518 – 65535)."
+msgstr ""
+
+msgid "OpenAppID"
+msgstr ""
+
+msgid "Enable application identification with the OpenAppID detectors."
+msgstr ""
+
+msgid "Not available – install the <code>openappid</code> package for application identification."
+msgstr ""
+
+msgid "These settings are only used with the <strong>nfq</strong> DAQ. Snort creates an nftables table <code>inet snort</code> that sends packets to the queues below."
+msgstr ""
+
+msgid "Chain hook"
+msgstr ""
+
+msgid "Where traffic is queued. <strong>forward</strong> inspects routed traffic between LAN and WAN, <strong>input</strong>/<strong>output</strong> only traffic to/from the router itself."
+msgstr ""
+
+msgid "Chain priority"
+msgstr ""
+
+msgid "First queue number"
+msgstr ""
+
+msgid "Number of queues"
+msgstr ""
+
+msgid "Usually 2 – 8, one per packet thread."
+msgstr ""
+
+msgid "Queue length"
+msgstr ""
+
+msgid "Packet threads"
+msgstr ""
+
+msgid "0 = one per CPU core."
+msgstr ""
+
+msgid "Fanout type"
+msgstr ""
+
+msgid "Kernel load balancing over the queues."
+msgstr ""
+
+msgid "Extra nftables include"
+msgstr ""
+
+msgid "Optional file with additional nftables statements inserted in the queue chain (e.g. to exclude traffic)."
+msgstr ""
+
+msgid "Log alerts to file"
+msgstr ""
+
+msgid "Write alerts as JSON to <code>alert_json.txt</code> in the log directory. Required for the Alerts page and statistics."
+msgstr ""
+
+msgid "Log directory"
+msgstr ""
+
+msgid "The default <code>/var/log</code> is in RAM; alerts are lost on reboot. A directory on USB storage keeps them, but avoid the internal flash."
+msgstr ""
+
+msgid "Working directory"
+msgstr ""
+
+msgid "Generated configuration and downloaded rules (when not stored persistently)."
+msgstr ""
+
+msgid "Configuration directory"
+msgstr ""
+
+msgid "Location of <code>snort.lua</code>, <code>snort_defaults.lua</code> and the <code>rules</code> directory."
+msgstr ""
+
+msgid "Restart on configuration change"
+msgstr ""
+
+msgid "Snort's init script regenerates the configuration on changes but does not restart the running daemon. When enabled, LuCI restarts Snort after you apply changes (also for custom rules and suppressions)."
+msgstr ""
+
+msgid "Additional include"
+msgstr ""
+
+msgid "Optional ucode template / Lua snippet appended to the generated <code>snort.lua</code> (after custom rules and suppressions). The variables <code>snort</code> and <code>nfq</code> are available."
+msgstr ""
+
+msgid "Detection policy"
+msgstr ""
+
+msgid "Talos tuning profile applied on top of <code>snort.lua</code> (inspector depths, decompression, PCRE limits). <em>Connectivity</em> is fastest, <em>Max detect</em> finds most but is slowest and noisiest."
+msgstr ""
+
+msgid "Default (snort.lua as is)"
+msgstr ""
+
+msgid "Connectivity – performance first"
+msgstr ""
+
+msgid "Balanced – recommended"
+msgstr ""
+
+msgid "Security – more inspection"
+msgstr ""
+
+msgid "Maximum detection – testing/lab"
+msgstr ""
+
+msgid "Port scan detection"
+msgstr ""
+
+msgid "Detect TCP/UDP/ICMP port scans and sweeps (generator 122). Without this option Snort tracks scans but never reports them."
+msgstr ""
+
+msgid "Port scan sensitivity"
+msgstr ""
+
+msgid "<em>Low</em> only reports scans with negative responses (few false positives); <em>High</em> also catches slow scans but needs tuning."
+msgstr ""
+
+msgid "low"
+msgstr ""
+
+msgid "medium"
+msgstr ""
+
+msgid "high"
+msgstr ""
+
+msgid "Ignore scanners"
+msgstr ""
+
+msgid "Hosts allowed to scan, e.g. your monitoring server or vulnerability scanner."
+msgstr ""
+
+msgid "IP reputation (blocklist)"
+msgstr ""
+
+msgid "Alert on (IDS) or block (IPS) traffic from/to listed addresses before any rule is evaluated (generator 136)."
+msgstr ""
+
+msgid "Blocked addresses"
+msgstr ""
+
+msgid "Blocklist file"
+msgstr ""
+
+msgid "Optional file with one address or prefix per line, e.g. a downloaded threat feed."
+msgstr ""
+
+msgid "Trusted addresses"
+msgstr ""
+
+msgid "Never blocked by reputation."
+msgstr ""
+
+msgid "Check private addresses"
+msgstr ""
+
+msgid "Also apply the lists to RFC 1918 addresses."
+msgstr ""
+
+msgid "Decoder and inspector alerts"
+msgstr ""
+
+msgid "Report all built-in events (malformed packets, protocol anomalies, stream issues, …). Useful for analysis, but can be very noisy."
+msgstr ""
+
+msgid "Performance monitoring"
+msgstr ""
+
+msgid "Record throughput, packet drops and CPU usage (perf_monitor) for the Statistics page."
+msgstr ""
+
+msgid "Sample interval"
+msgstr ""
+
+msgid "30 seconds"
+msgstr ""
+
+msgid "1 minute"
+msgstr ""
+
+msgid "5 minutes"
+msgstr ""
+
+msgid "Maximum alert log size"
+msgstr ""
+
+msgid "In MB. When reached Snort starts a new file and only one older file is kept, so RAM usage stays bounded. 0 = unlimited."
+msgstr ""
+
+msgid "Verify checksums"
+msgstr ""
+
+msgid "Disable when the router uses checksum offloading and Snort sees locally generated packets with invalid checksums (these are otherwise ignored)."
+msgstr ""
+
+msgid "Suspend slow rules"
+msgstr ""
+
+msgid "Temporarily disable rules that repeatedly exceed the time limit, protecting throughput on slow CPUs."
+msgstr ""
+
+msgid "Rule time limit"
+msgstr ""
+
+msgid "Microseconds per packet."
+msgstr ""
+
+msgid "Generated configuration"
+msgstr ""
+
+msgid "Show snort.lua"
+msgstr ""
+
+msgid "Last 30 days"
+msgstr ""
+
+msgid "All logged alerts"
+msgstr ""
+
+msgid "Mon"
+msgstr ""
+
+msgid "Tue"
+msgstr ""
+
+msgid "Wed"
+msgstr ""
+
+msgid "Thu"
+msgstr ""
+
+msgid "Fri"
+msgstr ""
+
+msgid "Sat"
+msgstr ""
+
+msgid "Sun"
+msgstr ""
+
+msgid "≈ %s per day"
+msgstr ""
+
+msgid "High priority"
+msgstr ""
+
+msgid "%s of all alerts"
+msgstr ""
+
+msgid "Rules that fired"
+msgstr ""
+
+msgid "%s of %s loaded rules"
+msgstr ""
+
+msgid "Share of the loaded rules that produced at least one alert in this period"
+msgstr ""
+
+msgid "%s destinations"
+msgstr ""
+
+msgid "Blocked / would block"
+msgstr ""
+
+msgid "No alerts in this period."
+msgstr ""
+
+msgid "Show as table"
+msgstr ""
+
+msgid "Period"
+msgstr ""
+
+msgid "Too few different rules fired for this analysis."
+msgstr ""
+
+msgid "Share of all alerts"
+msgstr ""
+
+msgid "Top %d rule(s)"
+msgstr ""
+
+msgid "%d of %d rules (%s) cause 80%% of all alerts."
+msgstr ""
+
+msgid "A steep curve means a few noisy rules dominate: tuning (suppressing, filtering or disabling) just those rules removes most of the noise."
+msgstr ""
+
+msgid "Rules ranked by number of alerts →"
+msgstr ""
+
+msgid "noisy"
+msgstr ""
+
+msgid "%.0f%% of alerts, one host pair"
+msgstr ""
+
+msgid "dominant"
+msgstr ""
+
+msgid "%.0f%% of all alerts"
+msgstr ""
+
+msgid "widespread"
+msgstr ""
+
+msgid "seen from %d sources"
+msgstr ""
+
+msgid "priority %s"
+msgstr ""
+
+msgid "Trend over the selected period"
+msgstr ""
+
+msgid "Suppress all alerts of this rule"
+msgstr ""
+
+msgid "Suppress"
+msgstr ""
+
+msgid "Disable the rule so it is no longer evaluated"
+msgstr ""
+
+msgid "Disable"
+msgstr ""
+
+msgid "Trend"
+msgstr ""
+
+msgid "Distinct source → destination addresses"
+msgstr ""
+
+msgid "Hosts"
+msgstr ""
+
+msgid "Tuning"
+msgstr ""
+
+msgid "Showing the 25 most frequent of %d rules."
+msgstr ""
+
+msgid "Rules loaded"
+msgstr ""
+
+msgid "Categories can be disabled completely on the"
+msgstr ""
+
+msgid "Rules page"
+msgstr ""
+
+msgid "Categories"
+msgstr ""
+
+msgid "Classification"
+msgstr ""
+
+msgid "No classification in the logged alerts (older alerts or rules without classtype)."
+msgstr ""
+
+msgid "Destination ports"
+msgstr ""
+
+msgid "Services (application protocols)"
+msgstr ""
+
+msgid "No service detected."
+msgstr ""
+
+msgid "Protocols"
+msgstr ""
+
+msgid "Actions"
+msgstr ""
+
+msgid "No performance samples yet; the first sample is written after one interval."
+msgstr ""
+
+msgid "Performance monitoring is disabled."
+msgstr ""
+
+msgid "Enable in Settings → Advanced"
+msgstr ""
+
+msgid "Packets received"
+msgstr ""
+
+msgid "in %d samples"
+msgstr ""
+
+msgid "Packets dropped"
+msgstr ""
+
+msgid "Snort cannot keep up"
+msgstr ""
+
+msgid "occasional drops"
+msgstr ""
+
+msgid "no drops"
+msgstr ""
+
+msgid "Alerts per 10,000 packets"
+msgstr ""
+
+msgid "Detection ratio: how often inspected traffic matches a rule"
+msgstr ""
+
+msgid "Average CPU (Snort threads)"
+msgstr ""
+
+msgid "Rule time-outs"
+msgstr ""
+
+msgid "slow rules hit the latency limit"
+msgstr ""
+
+msgid "Throughput"
+msgstr ""
+
+msgid "Traffic inspected by Snort."
+msgstr ""
+
+msgid "Mbit/s"
+msgstr ""
+
+msgid "Packets per second"
+msgstr ""
+
+msgid "packets/s"
+msgstr ""
+
+msgid "Packet drop rate"
+msgstr ""
+
+msgid "Packets the DAQ had to drop because Snort was too slow. Should stay at 0%."
+msgstr ""
+
+msgid "dropped"
+msgstr ""
+
+msgid "CPU usage"
+msgstr ""
+
+msgid "Snort packet threads, percentage of one core."
+msgstr ""
+
+msgid "CPU"
+msgstr ""
+
+msgid "Alerts per minute"
+msgstr ""
+
+msgid "alerts/min"
+msgstr ""
+
+msgid "New flows per second"
+msgstr ""
+
+msgid "Connections tracked by the stream inspector."
+msgstr ""
+
+msgid "flows/s"
+msgstr ""
+
+msgid "Alert logging is disabled, statistics stay empty."
+msgstr ""
+
+msgid "Summary"
+msgstr ""
+
+msgid "Alerts over time"
+msgstr ""
+
+msgid "Stacked by rule priority (from the rule's classtype). Hover a column for details."
+msgstr ""
+
+msgid "Activity by weekday and hour"
+msgstr ""
+
+msgid "Reveals patterns such as nightly scans or alerts during office hours."
+msgstr ""
+
+msgid "Rule effectiveness"
+msgstr ""
+
+msgid "Which rules generate the alerts, whether they are spread over many hosts or repeat between one host pair (often a false positive), and how they trend."
+msgstr ""
+
+msgid "Alerts per category compared with the number of loaded rules in that category."
+msgstr ""
+
+msgid "Breakdown"
+msgstr ""
+
+msgid "Snort performance"
+msgstr ""
+
+msgid "From Snort's perf_monitor: how much traffic is inspected and whether Snort keeps up with it."
+msgstr ""
+
+msgid "Snort IDS – Statistics"
+msgstr ""
+
+msgid "Insight into what Snort detects, how effective the rules are and how well Snort performs. Statistics are based on the logged alerts (at most the last 50,000) and Snort's performance monitor."
+msgstr ""
+
+msgid "An address is required when tracking by source or destination"
+msgstr ""
+
+msgid "Expecting an address, prefix or [list, of, addresses]"
+msgstr ""
+
+msgid "Snort IDS – Tuning"
+msgstr ""
+
+msgid "Reduce noise without editing the rule set. <strong>Suppressions</strong> silence a rule completely or for certain addresses (false positives). <strong>Event filters</strong> limit how often an alert is logged. <strong>Rate filters</strong> (IPS) switch a rule to another action when it fires too often, e.g. to block brute-force attempts. Rules that are not needed at all can be disabled on the Rules page."
+msgstr ""
+
+msgid "Suppression list"
+msgstr ""
+
+msgid "Add suppression"
+msgstr ""
+
+msgid "GID"
+msgstr ""
+
+msgid "Generator ID, 1 for normal text rules."
+msgstr ""
+
+msgid "SID"
+msgstr ""
+
+msgid "Signature ID of the rule."
+msgstr ""
+
+msgid "Scope"
+msgstr ""
+
+msgid "all traffic"
+msgstr ""
+
+msgid "only from source address"
+msgstr ""
+
+msgid "only to destination address"
+msgstr ""
+
+msgid "source %s"
+msgstr ""
+
+msgid "destination %s"
+msgstr ""
+
+msgid "IP address, prefix or a list like [10.0.0.1, 10.0.0.2]."
+msgstr ""
+
+msgid "Comment"
+msgstr ""
+
+msgid "e.g. rule message or reason"
+msgstr ""
+
+msgid "Event filters"
+msgstr ""
+
+msgid "<em>limit</em>: log at most <em>count</em> alerts per interval · <em>threshold</em>: log every <em>count</em>-th alert · <em>both</em>: log once per interval after <em>count</em> alerts. The rule is still evaluated (and can still block in IPS mode)."
+msgstr ""
+
+msgid "Add event filter"
+msgstr ""
+
+msgid "0 applies the filter to all rules of the generator."
+msgstr ""
+
+msgid "Type"
+msgstr ""
+
+msgid "limit"
+msgstr ""
+
+msgid "threshold"
+msgstr ""
+
+msgid "both"
+msgstr ""
+
+msgid "Count per"
+msgstr ""
+
+msgid "source address"
+msgstr ""
+
+msgid "destination address"
+msgstr ""
+
+msgid "Interval (s)"
+msgstr ""
+
+msgid "Only for address"
+msgstr ""
+
+msgid "Rate filters"
+msgstr ""
+
+msgid "When a rule fires more than <em>count</em> times within the interval, use the new action for the timeout period. Blocking actions only have effect in IPS mode."
+msgstr ""
+
+msgid "Add rate filter"
+msgstr ""
+
+msgid "rule"
+msgstr ""
+
+msgid "New action"
+msgstr ""
+
+msgid "Timeout (s)"
+msgstr ""
+
+msgid "Overview"
+msgstr ""
+
+msgid "Statistics"
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "Custom Rules"
+msgstr ""
+
+msgid "System Log"
+msgstr ""
+
+msgid "Grant access to LuCI app for Snort IDS"
+msgstr ""

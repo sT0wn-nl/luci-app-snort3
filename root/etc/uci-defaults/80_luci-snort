@@ -1,0 +1,34 @@
+#!/bin/sh
+# SPDX-License-Identifier: Apache-2.0
+
+LUCI_INCLUDE=/usr/share/luci-app-snort/include.uc
+
+[ -f /etc/config/snort ] || exit 0
+
+if ! uci -q get snort.luci >/dev/null; then
+	uci set snort.luci=luci
+	uci set snort.luci.rules_source='community'
+	uci set snort.luci.rules_persist='0'
+	uci set snort.luci.rules_backup='0'
+	uci set snort.luci.auto_update='0'
+	uci set snort.luci.update_hour='3'
+	uci set snort.luci.update_restart='1'
+	uci set snort.luci.restart_on_change='1'
+	uci set snort.luci.local_rules='/etc/snort/local.rules'
+	[ -n "$(uci -q get snort.snort.oinkcode)" ] && uci set snort.luci.rules_source='subscription'
+fi
+
+# Hook our template into the generated snort.lua; keep a user include.
+cur="$(uci -q get snort.snort.include)"
+if [ "$cur" != "$LUCI_INCLUDE" ]; then
+	[ -n "$cur" ] && uci set snort.luci.user_include="$cur"
+	uci set snort.snort.include="$LUCI_INCLUDE"
+fi
+
+uci commit snort
+
+/etc/init.d/luci_snort enable
+/etc/init.d/luci_snort start
+
+rm -f /tmp/luci-indexcache* /tmp/luci-modulecache/* 2>/dev/null
+exit 0

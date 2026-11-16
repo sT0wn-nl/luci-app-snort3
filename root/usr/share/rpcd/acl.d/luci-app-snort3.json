@@ -1,34 +1,19 @@
 {
 	"luci-app-snort3": {
-		"description": "Grant access to Snort3 IDS/IPS configuration",
+		"description": "Grant access to LuCI app for Snort IDS",
 		"read": {
-			"uci": ["snort"],
 			"ubus": {
-				"luci": ["getInitList"],
-				"luci.snort3": [
-					"getStatus",
-					"getAlerts",
-					"getRecentAlerts",
-					"checkUpdateStatus",
-					"getRulesInfo",
-					"getInterfaces"
-				],
-				"file": ["read", "stat", "exec"]
-			}
+				"luci.snort": [ "getStatus", "getInfo", "getAlerts", "getStats", "lookupRule", "getSyslog", "jobStatus", "printConfig", "getLocalRules", "getPerf", "getCategories" ],
+				"luci-rpc": [ "getNetworkDevices" ],
+				"network.interface": [ "dump" ]
+			},
+			"uci": [ "snort", "network" ]
 		},
 		"write": {
-			"uci": ["snort"],
 			"ubus": {
-				"luci": ["setInitAction"],
-				"luci.snort3": [
-					"serviceAction",
-					"updateRules",
-					"cleanupTemp",
-					"fixRules",
-					"clearAlerts",
-					"deleteAlerts"
-				]
-			}
+				"luci.snort": [ "clearAlerts", "serviceAction", "jobStart", "setLocalRules" ]
+			},
+			"uci": [ "snort" ]
 		}
 	}
 }

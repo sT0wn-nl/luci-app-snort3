@@ -1,0 +1,209 @@
+#!/bin/sh
+# SPDX-License-Identifier: Apache-2.0
+#
+# Helper for luci-app-snort.
+#
+#   helper job <update|check>   run a job in the background, output in $JOBDIR
+#   helper update [restart]     download/install rules using the LuCI settings
+#   helper autoupdate           called from cron, update + optional restart
+#   helper cron-sync            write/remove the cron entry for auto updates
+#   helper apply                called by procd after a change of /etc/config/snort
+#   helper uninstall            cleanup on package removal
+
+JOBDIR=/var/run/luci-snort
+CRONTAB=/etc/crontabs/root
+TAG='# luci-app-snort'
+LUCI_INCLUDE=/usr/share/luci-app-snort/include.uc
+SELF=/usr/libexec/luci-snort/helper
+
+log() { logger -t luci-snort -p daemon.info "$*"; echo "$*"; }
+
+cfg() { uci -q get "snort.luci.$1" || echo "$2"; }
+
+snort_running() { /etc/init.d/snort running >/dev/null 2>&1; }
+
+restart_snort() {
+	if /usr/bin/snort-mgr -q check; then
+		log "Restarting Snort"
+		/etc/init.d/snort restart
+	else
+		log "Snort configuration check failed, NOT restarting (run 'snort-mgr check')"
+		return 1
+	fi
+}
+
+do_update() {
+	local src args='' conf_dir
+	src="$(cfg rules_source community)"
+	conf_dir="$(uci -q get snort.snort.config_dir || echo /etc/snort)"
+	conf_dir="${conf_dir%/}"
+
+	[ "$src" = "testing" ] && args="$args -t"
+	[ "$(cfg rules_persist 0)" = "1" ] && args="$args -p"
+	[ "$(cfg rules_backup 0)" = "1" ] && args="$args -b"
+
+	if [ "$src" = "subscription" ] && [ -z "$(uci -q get snort.snort.oinkcode)" ]; then
+		log "Rule source 'subscription' selected but no oinkcode configured"
+		return 1
+	fi
+
+	# snort-rules removes the current rules before it knows whether the
+	# download succeeded, so keep a copy to restore on failure.
+	local rules="$conf_dir/rules" bak="$JOBDIR/rules.prev" target=''
+	rm -rf "$bak"
+	if ls "$rules/"*.rules >/dev/null 2>&1; then
+		target="$(readlink -f "$rules")"
+		mkdir -p "$bak" && cp -a "$rules/." "$bak/"
+	fi
+
+	local data_dir marker failed=0
+	data_dir="$(uci -q get snort.snort.temp_dir || echo /var/snort.d)"
+	mkdir -p "$JOBDIR" "$data_dir"
+	marker="$JOBDIR/update.marker"
+	touch "$marker"
+	sleep 1
+
+	log "Updating Snort rules (source: $src, options:${args:- none})"
+	# snort-rules exits 0 even when wget fails inside a pipe, so verify the result.
+	/usr/bin/snort-rules $args 2>&1
+
+	if [ "$src" != "testing" ] && { [ ! -s "$data_dir/rules.tar.gz" ] || [ ! "$data_dir/rules.tar.gz" -nt "$marker" ]; }; then
+		log "Rule update FAILED: download did not succeed"
+		failed=1
+	elif ! ls "$rules/"*.rules >/dev/null 2>&1; then
+		log "Rule update FAILED: no rule files found in $rules"
+		failed=1
+	fi
+	rm -f "$marker"
+
+	if [ "$failed" = 1 ]; then
+		if [ -n "$target" ] && [ -d "$bak" ]; then
+			log "Restoring previous rules"
+			rm -rf "$rules"
+			mkdir -p "$target" && cp -a "$bak/." "$target/"
+			[ "$target" != "$rules" ] && ln -s "$target" "$rules"
+		fi
+		rm -rf "$bak"
+		return 1
+	fi
+	rm -rf "$bak"
+
+	printf '{ "source": "%s", "time": %s }\n' "$src" "$(date +%s)" > "$conf_dir/rules/.luci-update"
+	log "Rules installed: $(ls "$conf_dir/rules/"*.rules | wc -l) file(s)"
+
+	if [ "$1" = "restart" ] && snort_running; then
+		restart_snort
+	fi
+	return 0
+}
+
+run_job() {
+	local name="$1"
+	mkdir -p "$JOBDIR"
+	local oldpid
+	oldpid="$(cat "$JOBDIR/$name.pid" 2>/dev/null)"
+	if [ -n "$oldpid" ] && [ "$oldpid" != "$$" ] && kill -0 "$oldpid" 2>/dev/null; then
+		echo "Job '$name' is already running"
+		exit 1
+	fi
+	echo $$ > "$JOBDIR/$name.pid"
+	rm -f "$JOBDIR/$name.rc"
+	date +%s > "$JOBDIR/$name.started"
+	{
+		case "$name" in
+			update) do_update ;;
+			update-restart) do_update restart ;;
+			check)
+				echo "Running 'snort-mgr --verbose check' ..."
+				if [ "$(uci -q get snort.snort.manual)" = "1" ]; then
+					cfgdir="$(uci -q get snort.snort.config_dir || echo /etc/snort)"
+					echo "Manual mode: testing ${cfgdir%/}/snort.lua"
+					SNORT_LUA_PATH="$cfgdir" /usr/bin/snort -T -c "${cfgdir%/}/snort.lua" --tweaks local 2>&1
+				else
+					/usr/bin/snort-mgr --verbose check 2>&1
+				fi
+				rc=$?
+				echo ""
+				if [ "$rc" = 0 ]; then
+					echo "=> Configuration test PASSED"
+				else
+					echo "=> Configuration test FAILED (exit code $rc), see the errors above"
+				fi
+				[ "$rc" = 0 ]
+				;;
+			*) echo "Unknown job '$name'"; false ;;
+		esac
+	} > "$JOBDIR/$name.log" 2>&1
+	echo $? > "$JOBDIR/$name.rc"
+	rm -f "$JOBDIR/$name.pid"
+}
+
+cron_sync() {
+	local mode hour line=''
+	mode="$(cfg auto_update 0)"
+	hour="$(cfg update_hour 3)"
+	case "$hour" in ''|*[!0-9]*) hour=3 ;; esac
+
+	case "$mode" in
+		daily)  line="0 $hour * * * $SELF autoupdate $TAG" ;;
+		weekly) line="0 $hour * * 0 $SELF autoupdate $TAG" ;;
+	esac
+
+	touch "$CRONTAB"
+	local old new
+	old="$(grep -F "$TAG" "$CRONTAB")"
+	[ "$old" = "$line" ] && return 0
+
+	new="$(grep -vF "$TAG" "$CRONTAB")"
+	{
+		[ -n "$new" ] && printf '%s\n' "$new"
+		[ -n "$line" ] && printf '%s\n' "$line"
+		true
+	} > "$CRONTAB.luci-snort" && cat "$CRONTAB.luci-snort" > "$CRONTAB"
+	rm -f "$CRONTAB.luci-snort"
+	/etc/init.d/cron restart >/dev/null 2>&1
+	log "Rule auto-update schedule: $([ "$mode" = 0 ] && echo disabled || echo "$mode")"
+}
+
+case "$1" in
+	job)
+		[ -n "$2" ] || exit 1
+		run_job "$2"
+		;;
+	update)
+		do_update "$2"
+		;;
+	autoupdate)
+		if [ "$(cfg update_restart 1)" = "1" ]; then
+			do_update restart
+		else
+			do_update
+		fi
+		;;
+	cron-sync)
+		cron_sync
+		;;
+	apply)
+		cron_sync
+		# Snort's own init script regenerates its config on reload but does
+		# not restart the daemon, so configuration changes would not take
+		# effect.  Restart it here unless the user disabled this.
+		if [ "$(cfg restart_on_change 1)" = "1" ] && \
+		   [ "$(uci -q get snort.snort.enabled)" = "1" ] && snort_running; then
+			restart_snort
+		fi
+		;;
+	uninstall)
+		touch "$CRONTAB"
+		grep -vF "$TAG" "$CRONTAB" > "$CRONTAB.luci-snort"; cat "$CRONTAB.luci-snort" > "$CRONTAB"; rm -f "$CRONTAB.luci-snort"
+		if [ "$(uci -q get snort.snort.include)" = "$LUCI_INCLUDE" ]; then
+			uci set snort.snort.include="$(uci -q get snort.luci.user_include)"
+			uci commit snort
+		fi
+		rm -rf "$JOBDIR"
+		;;
+	*)
+		echo "Usage: $0 job <update|update-restart|check> | update [restart] | autoupdate | cron-sync | apply | uninstall" >&2
+		exit 1
+		;;
+esac
