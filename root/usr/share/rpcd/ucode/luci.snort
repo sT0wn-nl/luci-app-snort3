@@ -180,10 +180,43 @@ function category(msg, gid) {
 	return (int(gid ?? 1) == 1) ? 'OTHER' : `GID ${gid}`;
 }
 
+// Parse a Snort address list ("10.0.0.1", "10.0.0.0/24", "[a, b]") into
+// [ { addr: [bytes], bits } ]. Returns null for lists we cannot evaluate
+// exactly (negations, variables), so those alerts stay visible.
+function parse_nets(spec) {
+	let list = split(replace(spec ?? '', /[][ ]/g, ''), ',');
+	let out = [];
+	for (let e in list) {
+		if (!length(e)) continue;
+		if (match(e, /[!$]/)) return null;
+		let m = match(e, /^([^\/]+)(\/([0-9]+))?$/);
+		let a = m ? iptoarr(m[1]) : null;
+		if (!a) return null;
+		let bits = m[3] != null ? int(m[3]) : length(a) * 8;
+		push(out, { addr: a, bits: bits });
+	}
+	return length(out) ? out : null;
+}
+
+function ip_in(ip, nets) {
+	let a = iptoarr(ip ?? '');
+	if (!a) return false;
+	for (let n in nets) {
+		if (length(n.addr) != length(a)) continue;
+		let ok = true;
+		for (let i = 0, bits = n.bits; bits > 0 && ok; i++, bits -= 8) {
+			let mask = bits >= 8 ? 255 : (255 << (8 - bits)) & 255;
+			if ((a[i] & mask) != (n.addr[i] & mask)) ok = false;
+		}
+		if (ok) return true;
+	}
+	return false;
+}
+
 // Rules that are currently switched off: disabled SIDs and categories, and
 // suppressions that cover a whole rule (no address scope).
 function tuned_rules(cfg) {
-	let t = { sids: {}, cats: {}, sup: {} };
+	let t = { sids: {}, cats: {}, sup: {}, scoped: {} };
 	for (let k in cfg.disabled_sid) {
 		let m = match(k, /^([0-9]+):([0-9]+)$/) ?? match(k, /^()([0-9]+)$/);
 		if (m) t.sids[`${m[1] || 1}:${m[2]}`] = true;
@@ -191,8 +224,16 @@ function tuned_rules(cfg) {
 	for (let c in cfg.disabled_category)
 		t.cats[c] = true;
 	cursor().foreach('snort', 'suppress', (s) => {
-		if (s.enabled != '0' && match(s.sid ?? '', /^[0-9]+$/) && !(s.track in [ 'by_src', 'by_dst' ]))
-			t.sup[`${match(s.gid ?? '', /^[0-9]+$/) ? s.gid : 1}:${s.sid}`] = true;
+		if (s.enabled == '0' || !match(s.sid ?? '', /^[0-9]+$/))
+			return;
+		let key = `${match(s.gid ?? '', /^[0-9]+$/) ? s.gid : 1}:${s.sid}`;
+		if (!(s.track in [ 'by_src', 'by_dst' ])) {
+			t.sup[key] = true;
+			return;
+		}
+		let nets = parse_nets(s.ip);
+		if (nets)
+			push(t.scoped[key] ??= [], { track: s.track, nets: nets });
 	});
 	return t;
 }
@@ -204,6 +245,9 @@ function tuned_state(a, t) {
 		return 'disabled';
 	if (t.sup[key])
 		return 'suppressed';
+	for (let sc in (t.scoped[key] ?? []))
+		if (ip_in(sc.track == 'by_src' ? a.src_addr : a.dst_addr, sc.nets))
+			return 'suppressed';
 	return null;
 }
 
