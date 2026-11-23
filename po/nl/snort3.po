@@ -622,8 +622,11 @@ msgstr "flash"
 msgid "Rules"
 msgstr "Regels"
 
-msgid "%d active, %d disabled (commented out)"
-msgstr "%d actief, %d uitgeschakeld (uitgecommentarieerd)"
+msgid "%d disabled in LuCI"
+msgstr "%d uitgeschakeld in LuCI"
+
+msgid "%d commented out in the rule files"
+msgstr "%d uitgecommentarieerd in de regelbestanden"
 
 msgid "%d active in %s"
 msgstr "%d actief in %s"
@@ -639,6 +642,12 @@ msgstr "Bestand"
 
 msgid "Active"
 msgstr "Actief"
+
+msgid "Disabled in LuCI"
+msgstr "Uitgeschakeld in LuCI"
+
+msgid "Commented out"
+msgstr "Uitgecommentarieerd"
 
 msgid "Size"
 msgstr "Grootte"

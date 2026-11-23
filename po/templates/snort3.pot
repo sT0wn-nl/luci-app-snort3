@@ -619,7 +619,10 @@ msgstr ""
 msgid "Rules"
 msgstr ""
 
-msgid "%d active, %d disabled (commented out)"
+msgid "%d disabled in LuCI"
+msgstr ""
+
+msgid "%d commented out in the rule files"
 msgstr ""
 
 msgid "%d active in %s"
@@ -635,6 +638,12 @@ msgid "File"
 msgstr ""
 
 msgid "Active"
+msgstr ""
+
+msgid "Disabled in LuCI"
+msgstr ""
+
+msgid "Commented out"
 msgstr ""
 
 msgid "Size"

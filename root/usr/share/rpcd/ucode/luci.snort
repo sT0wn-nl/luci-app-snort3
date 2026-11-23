@@ -171,14 +171,36 @@ function rules_dir_info(cfg) {
 	return res;
 }
 
-function count_rules(path) {
+// Rule category = prefix of the message, e.g. "MALWARE-CNC", "(port_scan)".
+function category(msg, gid) {
+	let m = match(msg ?? '', /^([A-Z0-9][A-Z0-9_-]+) /);
+	if (m) return m[1];
+	m = match(msg ?? '', /^\(([a-z0-9_]+)\)/);
+	if (m) return `(${m[1]})`;
+	return (int(gid ?? 1) == 1) ? 'OTHER' : `GID ${gid}`;
+}
+
+// Count rules in a file: active, disabled via LuCI (disabled_sid or
+// disabled_category, applied as rule states) and commented out in the file.
+function count_rules(path, dis) {
 	let fd = open(path, 'r');
-	let res = { enabled: 0, disabled: 0 };
+	let res = { enabled: 0, disabled: 0, luci: 0 };
 	if (!fd)
 		return res;
 	for (let line = fd.read('line'); length(line); line = fd.read('line')) {
-		if (match(line, /^\s*(alert|block|drop|reject|pass|log|rewrite|react|sdrop|file_id)\s/))
+		if (match(line, /^\s*(alert|block|drop|reject|pass|log|rewrite|react|sdrop|file_id)\s/)) {
+			if (dis) {
+				let sid = match(line, /[^a-z_]sid:\s*([0-9]+)/);
+				let gid = match(line, /[^a-z_]gid:\s*([0-9]+)/);
+				let msg = match(line, /msg:\s*"([^"]*)"/);
+				let key = `${gid ? gid[1] : 1}:${sid ? sid[1] : 0}`;
+				if ((sid && dis.sids[key]) || dis.cats[category(msg ? msg[1] : '', gid ? gid[1] : 1)]) {
+					res.luci++;
+					continue;
+				}
+			}
 			res.enabled++;
+		}
 		else if (match(line, /^\s*#\s*(alert|block|drop|reject|pass|log|rewrite|react|sdrop)\s.*sid:/))
 			res.disabled++;
 	}
@@ -241,15 +263,6 @@ function top(map, n) {
 		push(arr, v);
 	arr = sort(arr, (a, b) => b.count - a.count);
 	return slice(arr, 0, n);
-}
-
-// Rule category = prefix of the message, e.g. "MALWARE-CNC", "(port_scan)".
-function category(msg, gid) {
-	let m = match(msg ?? '', /^([A-Z0-9][A-Z0-9_-]+) /);
-	if (m) return m[1];
-	m = match(msg ?? '', /^\(([a-z0-9_]+)\)/);
-	if (m) return `(${m[1]})`;
-	return (int(gid ?? 1) == 1) ? 'OTHER' : `GID ${gid}`;
 }
 
 function hours_of(alerts, now) {
@@ -345,15 +358,24 @@ const methods = {
 			let ver = exec('/usr/bin/snort -V 2>&1');
 			let m = ver ? match(ver, /Version ([0-9.]+)/) : null;
 			let rules = rules_dir_info(cfg);
-			let total = { enabled: 0, disabled: 0 };
+			let dis = { sids: {}, cats: {} };
+			for (let k in cfg.disabled_sid) {
+				let m = match(k, /^([0-9]+):([0-9]+)$/) ?? match(k, /^()([0-9]+)$/);
+				if (m) dis.sids[`${m[1] || 1}:${m[2]}`] = true;
+			}
+			for (let c in cfg.disabled_category)
+				dis.cats[c] = true;
+			let total = { enabled: 0, disabled: 0, luci: 0 };
 			for (let f in rules.files) {
-				let c = count_rules(`${rules.path}/${f.name}`);
+				let c = count_rules(`${rules.path}/${f.name}`, dis);
 				f.enabled = c.enabled;
 				f.disabled = c.disabled;
+				f.luci = c.luci;
 				total.enabled += c.enabled;
 				total.disabled += c.disabled;
+				total.luci += c.luci;
 			}
-			let local = count_rules(cfg.local_rules);
+			let local = count_rules(cfg.local_rules, dis);
 
 			let daq = [];
 			for (let d in glob('/usr/lib/daq/daq_*.so') ?? [])
@@ -366,7 +388,7 @@ const methods = {
 				daq_modules: daq,
 				rules: rules,
 				rules_total: total,
-				local_rules: { path: cfg.local_rules, enabled: local.enabled },
+				local_rules: { path: cfg.local_rules, enabled: local.enabled, luci: local.luci },
 				rules_source: cfg.rules_source,
 				oinkcode_set: cfg.oinkcode_set,
 				auto_update: cfg.auto_update,

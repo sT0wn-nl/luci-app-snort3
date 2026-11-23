@@ -35,6 +35,7 @@ return view.extend({
 		const files = (r.files ?? []).map((f) => E('tr', { 'class': 'tr' }, [
 			E('td', { 'class': 'td' }, [ f.name ]),
 			E('td', { 'class': 'td', 'style': 'text-align:right' }, [ String(f.enabled ?? 0) ]),
+			E('td', { 'class': 'td', 'style': 'text-align:right' }, [ String(f.luci ?? 0) ]),
 			E('td', { 'class': 'td', 'style': 'text-align:right' }, [ String(f.disabled ?? 0) ]),
 			E('td', { 'class': 'td', 'style': 'text-align:right' }, [ common.fmtBytes(f.size) ]),
 			E('td', { 'class': 'td' }, [ common.fmtEpoch(f.mtime) ])
@@ -48,7 +49,11 @@ return view.extend({
 				[ _('Source'), r.source ? common.sourceText(r.source) : _('unknown (installed outside LuCI)') ],
 				[ _('Last update'), common.fmtEpoch(r.last_update ?? r.mtime) ],
 				[ _('Location'), E('span', {}, [ location, ' ', r.files?.length ? common.badge(r.volatile ? _('RAM') : _('flash'), r.volatile ? 'orange' : 'blue') : '' ]) ],
-				[ _('Rules'), _('%d active, %d disabled (commented out)').format(info.rules_total?.enabled ?? 0, info.rules_total?.disabled ?? 0) ],
+				[ _('Rules'), E('span', {}, [
+					_('%d active').format(info.rules_total?.enabled ?? 0),
+					' · ', _('%d disabled in LuCI').format((info.rules_total?.luci ?? 0) + (info.local_rules?.luci ?? 0)),
+					' · ', _('%d commented out in the rule files').format(info.rules_total?.disabled ?? 0)
+				]) ],
 				[ _('Custom rules'), E('span', {}, [
 					_('%d active in %s').format(info.local_rules?.enabled ?? 0, info.local_rules?.path ?? '-'), ' ',
 					E('a', { 'href': L.url('admin/services/snort/localrules') }, [ _('Edit') ])
@@ -60,7 +65,8 @@ return view.extend({
 					E('tr', { 'class': 'tr table-titles' }, [
 						E('th', { 'class': 'th' }, [ _('File') ]),
 						E('th', { 'class': 'th', 'style': 'text-align:right' }, [ _('Active') ]),
-						E('th', { 'class': 'th', 'style': 'text-align:right' }, [ _('Disabled') ]),
+						E('th', { 'class': 'th', 'style': 'text-align:right' }, [ _('Disabled in LuCI') ]),
+						E('th', { 'class': 'th', 'style': 'text-align:right' }, [ _('Commented out') ]),
 						E('th', { 'class': 'th', 'style': 'text-align:right' }, [ _('Size') ]),
 						E('th', { 'class': 'th' }, [ _('Modified') ])
 					]),
