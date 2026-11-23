@@ -48,9 +48,10 @@ return view.extend({
 				link('rules', _('Enable persistent storage or automatic updates'))
 			]));
 
-		if (st.mode === 'ips' && st.method === 'pcap' && !st.manual)
-			out.push(E('div', { 'class': 'alert-message error' }, [
-				_('IPS mode cannot work with the pcap DAQ. Use NFQ (recommended) or afpacket.')
+		const daq = st.manual ? null : common.daqProblem(st.mode, st.method, st.interface, st.nfq_chain);
+		if (daq)
+			out.push(E('div', { 'class': 'alert-message ' + daq.level }, [
+				daq.text, ' ', link('settings', _('Change in Settings'))
 			]));
 
 		if (!st.logging && !st.manual)
@@ -200,7 +201,7 @@ return view.extend({
 
 	/* Only rebuild notices / buttons when their inputs change, so buttons stay clickable. */
 	stateKey(st) {
-		return JSON.stringify([ st.running, st.enabled, st.boot_enabled, st.manual, st.mode, st.method,
+		return JSON.stringify([ st.running, st.enabled, st.boot_enabled, st.manual, st.mode, st.method, st.interface, st.nfq_chain,
 			st.logging, st.luci_include, st.rules_present, st.rules_volatile, st.rules_dangling,
 			st.restart_needed, st.jobs ]);
 	},

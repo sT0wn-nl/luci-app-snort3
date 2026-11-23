@@ -82,7 +82,7 @@ return view.extend({
 		o.rmempty = false;
 
 		o = s.taboption('general', form.ListValue, 'mode', _('Operation mode'),
-			_('<strong>IDS</strong> only detects and logs. <strong>IPS</strong> runs inline and can drop traffic; this requires the NFQ (or afpacket) DAQ and the rules\' (or overridden) action.'));
+			_('<strong>IDS</strong> only detects and logs. <strong>IPS</strong> runs inline and can drop traffic; this requires the NFQ DAQ (chain hook "forward" on a router) and a blocking action in the rule (or the action override).'));
 		o.value('ids', _('IDS – passive detection'));
 		o.value('ips', _('IPS – inline prevention'));
 		o.default = 'ids';
@@ -130,8 +130,10 @@ return view.extend({
 		o.depends('manual', '0');
 		o.validate = function(section_id, value) {
 			const mode = this.section.formvalue(section_id, 'mode');
-			if (mode === 'ips' && value === 'pcap')
-				return _('IPS mode requires the nfq or afpacket DAQ');
+			const iface = this.section.formvalue(section_id, 'interface');
+			const problem = common.daqProblem(mode, value, iface);
+			if (problem && problem.level === 'error')
+				return problem.text;
 			if (value && info.daq_modules?.length && info.daq_modules.indexOf(value) < 0)
 				return _('DAQ module "%s" is not installed').format(value);
 			return true;
@@ -183,7 +185,8 @@ return view.extend({
 
 		o = nfq(form.ListValue, 'chain_type', _('Chain hook'),
 			_('Where traffic is queued. <strong>forward</strong> inspects routed traffic between LAN and WAN, <strong>input</strong>/<strong>output</strong> only traffic to/from the router itself.'));
-		[ 'forward', 'input', 'output', 'prerouting', 'postrouting' ].forEach((v) => o.value(v));
+		o.value('forward', _('forward – LAN ↔ internet (recommended)'));
+		[ 'input', 'output', 'prerouting', 'postrouting' ].forEach((v) => o.value(v));
 		o.default = 'input';
 
 		o = nfq(form.ListValue, 'chain_priority', _('Chain priority'));

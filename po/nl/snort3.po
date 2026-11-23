@@ -133,6 +133,18 @@ msgstr "Laden…"
 msgid "(empty)"
 msgstr "(leeg)"
 
+msgid "IPS mode cannot block with the pcap DAQ: Snort only sees a copy of the traffic. Use the nfq DAQ with chain hook \"forward\"."
+msgstr "IPS-modus kan niet blokkeren met de pcap-DAQ: Snort ziet alleen een kopie van het verkeer. Gebruik de nfq-DAQ met chain-hook \"forward\"."
+
+msgid "IPS mode with the afpacket DAQ needs an interface pair such as eth0:eth1 (Snort bridges the two). With a single interface Snort only sees a copy of the traffic: alerts say \"block\", but nothing is blocked. On a router use the nfq DAQ with chain hook \"forward\"."
+msgstr "IPS-modus met de afpacket-DAQ vereist een interfacepaar zoals eth0:eth1 (Snort verbindt die twee). Met één interface ziet Snort alleen een kopie van het verkeer: alerts melden \"block\", maar er wordt niets tegengehouden. Gebruik op een router de nfq-DAQ met chain-hook \"forward\"."
+
+msgid "Interface %s is not an Ethernet device; the %s DAQ cannot capture on it and Snort will not start. Choose br-lan or the physical device below it, or use the nfq DAQ."
+msgstr "Interface %s is geen Ethernet-apparaat; de %s-DAQ kan daar niet op luisteren en Snort start niet. Kies br-lan of het fysieke apparaat eronder, of gebruik de nfq-DAQ."
+
+msgid "NFQ chain hook is \"%s\": only traffic to or from the router itself is inspected. Use \"forward\" to inspect and block traffic between LAN and internet."
+msgstr "De NFQ-chain-hook is \"%s\": alleen verkeer van of naar de router zelf wordt geïnspecteerd. Gebruik \"forward\" om verkeer tussen LAN en internet te inspecteren en te blokkeren."
+
 msgid "Manual configuration mode."
 msgstr "Handmatige configuratiemodus."
 
@@ -402,9 +414,6 @@ msgstr "De regelset staat in het RAM en gaat verloren na een herstart."
 
 msgid "Enable persistent storage or automatic updates"
 msgstr "Schakel permanente opslag of automatische updates in"
-
-msgid "IPS mode cannot work with the pcap DAQ. Use NFQ (recommended) or afpacket."
-msgstr "IPS-modus werkt niet met de pcap-DAQ. Gebruik NFQ (aanbevolen) of afpacket."
 
 msgid "Alert logging is disabled, so the Alerts page and statistics stay empty."
 msgstr "Alertlogging is uitgeschakeld; de pagina Alerts en de statistieken blijven daardoor leeg."
@@ -802,8 +811,8 @@ msgstr "Handmatig – eigen snort.lua gebruiken"
 msgid "Network device Snort listens on. For IDS this is usually the WAN device (%s). For afpacket inline mode enter a device pair like <code>eth0:eth1</code>."
 msgstr "Netwerkapparaat waarop Snort luistert. Voor IDS is dit meestal het WAN-apparaat (%s). Voor afpacket-inlinemodus geef je een paar op zoals <code>eth0:eth1</code>."
 
-msgid "<strong>IDS</strong> only detects and logs. <strong>IPS</strong> runs inline and can drop traffic; this requires the NFQ (or afpacket) DAQ and the rules' (or overridden) action."
-msgstr "<strong>IDS</strong> detecteert en logt alleen. <strong>IPS</strong> draait inline en kan verkeer laten vallen; dit vereist de NFQ- (of afpacket-)DAQ en de actie uit de regels (of de override)."
+msgid "<strong>IDS</strong> only detects and logs. <strong>IPS</strong> runs inline and can drop traffic; this requires the NFQ DAQ (chain hook \"forward\" on a router) and a blocking action in the rule (or the action override)."
+msgstr "<strong>IDS</strong> detecteert en logt alleen. <strong>IPS</strong> draait inline en kan verkeer tegenhouden; dit vereist de NFQ-DAQ (chain-hook \"forward\" op een router) en een blokkerende actie in de regel (of de actie-override)."
 
 msgid "Home network (HOME_NET)"
 msgstr "Thuisnetwerk (HOME_NET)"
@@ -831,9 +840,6 @@ msgstr "<strong>afpacket</strong>: snel, aanbevolen voor IDS. <strong>pcap</stro
 
 msgid "nfq (netfilter queue)"
 msgstr "nfq (netfilter-queue)"
-
-msgid "IPS mode requires the nfq or afpacket DAQ"
-msgstr "IPS-modus vereist de nfq- of afpacket-DAQ"
 
 msgid "DAQ module \"%s\" is not installed"
 msgstr "DAQ-module \"%s\" is niet geïnstalleerd"
@@ -882,6 +888,9 @@ msgstr "Chain-hook"
 
 msgid "Where traffic is queued. <strong>forward</strong> inspects routed traffic between LAN and WAN, <strong>input</strong>/<strong>output</strong> only traffic to/from the router itself."
 msgstr "Waar verkeer in de queue wordt gezet. <strong>forward</strong> inspecteert gerouteerd verkeer tussen LAN en WAN, <strong>input</strong>/<strong>output</strong> alleen verkeer van/naar de router zelf."
+
+msgid "forward – LAN ↔ internet (recommended)"
+msgstr "forward – LAN ↔ internet (aanbevolen)"
 
 msgid "Chain priority"
 msgstr "Chain-prioriteit"

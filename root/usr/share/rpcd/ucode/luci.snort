@@ -322,6 +322,7 @@ const methods = {
 				method: cfg.method,
 				action: cfg.action,
 				interface: cfg.iface,
+				nfq_chain: cursor().get('snort', 'nfq', 'chain_type') ?? 'input',
 				home_net: cfg.home_net,
 				logging: cfg.logging == '1',
 				luci_include: cfg.include == LUCI_INCLUDE,

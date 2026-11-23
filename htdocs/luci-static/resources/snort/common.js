@@ -263,6 +263,25 @@ return baseclass.extend({
 		});
 	},
 
+	/*
+	 * Check the combination of operation mode, DAQ and interface.
+	 * Returns { level: 'error'|'warning', text } or null.
+	 */
+	daqProblem(mode, method, iface, chain) {
+		const devs = String(iface || '').split(':').filter((d) => d);
+		const noEther = devs.filter((d) => /^(pppoe-|ppp|l2tp-|pptp-|3g-|wwan|tun|tap|wg|gre|ipsec|xfrm|ifb)/.test(d));
+
+		if (mode === 'ips' && method === 'pcap')
+			return { level: 'error', text: _('IPS mode cannot block with the pcap DAQ: Snort only sees a copy of the traffic. Use the nfq DAQ with chain hook "forward".') };
+		if (mode === 'ips' && method === 'afpacket' && devs.length < 2)
+			return { level: 'error', text: _('IPS mode with the afpacket DAQ needs an interface pair such as eth0:eth1 (Snort bridges the two). With a single interface Snort only sees a copy of the traffic: alerts say "block", but nothing is blocked. On a router use the nfq DAQ with chain hook "forward".') };
+		if ((method === 'afpacket' || method === 'pcap') && noEther.length)
+			return { level: 'error', text: _('Interface %s is not an Ethernet device; the %s DAQ cannot capture on it and Snort will not start. Choose br-lan or the physical device below it, or use the nfq DAQ.').format(noEther.join(', '), method) };
+		if (mode === 'ips' && method === 'nfq' && chain && chain !== 'forward')
+			return { level: 'warning', text: _('NFQ chain hook is "%s": only traffic to or from the router itself is inspected. Use "forward" to inspect and block traffic between LAN and internet.').format(chain) };
+		return null;
+	},
+
 	/* Notices shared by several pages. */
 	notices(st, page) {
 		const out = [];
