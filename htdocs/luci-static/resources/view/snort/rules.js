@@ -13,7 +13,7 @@ return view.extend({
 			common.callInfo(),
 			common.callStatus(),
 			common.callCategories(),
-			common.callStats(2592000),
+			common.callStats(2592000, true),
 			uci.load('snort')
 		]);
 	},

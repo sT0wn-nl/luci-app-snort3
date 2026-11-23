@@ -140,9 +140,12 @@ return view.extend({
 
 	renderStats(stats) {
 		if (!stats || !stats.total)
-			return E('p', { 'class': 'cbi-value-description' }, [ _('No alerts have been logged yet.') ]);
+			return E('div', {}, [
+				E('p', { 'class': 'cbi-value-description' }, [ _('No alerts have been logged yet.') ]),
+				common.hiddenNote(stats?.hidden)
+			]);
 
-		const cards = E('div', { 'style': 'margin-bottom:1.2em' }, [ charts.kpis([
+		const cards = E('div', { 'style': 'margin-bottom:1.2em' }, [ common.hiddenNote(stats.hidden), charts.kpis([
 			{ value: charts.fmtNum(stats.total) + (stats.truncated ? '+' : ''), label: _('Alerts in log') },
 			{ value: charts.fmtNum(stats.last24), label: _('Last 24 hours') },
 			{ value: charts.fmtNum(stats.unique_sigs), label: _('Distinct rules') },

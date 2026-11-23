@@ -12,10 +12,11 @@ return view.extend({
 	page: 0,
 
 	load() {
-		const q = new URLSearchParams(window.location.search).get('q');
-		this.initialQuery = q ?? '';
+		const qs = new URLSearchParams(window.location.search);
+		this.initialQuery = qs.get('q') ?? '';
+		this.showAll = qs.get('all') === '1';
 		return Promise.all([
-			common.callAlerts(1000),
+			common.callAlerts(1000, this.showAll),
 			common.callStatus()
 		]);
 	},
@@ -59,7 +60,7 @@ return view.extend({
 			E('td', { 'class': 'td', 'style': 'word-break:break-all' }, [ common.addr(a.src_addr, a.src_port) ]),
 			E('td', { 'class': 'td', 'style': 'word-break:break-all' }, [ common.addr(a.dst_addr, a.dst_port) ]),
 			E('td', { 'class': 'td', 'style': 'white-space:nowrap', 'click': (ev) => ev.stopPropagation() }, [ common.ruleLink(a.gid, a.sid, a.rev) ]),
-			E('td', { 'class': 'td' }, [ a.msg ?? '-' ])
+			E('td', { 'class': 'td' }, [ a.msg ?? '-', a.tuned ? ' ' : '', common.tunedBadge(a.tuned) ])
 		]));
 
 		const table = E('table', { 'class': 'table cbi-section-table' }, [
@@ -111,7 +112,7 @@ return view.extend({
 			E('tr', { 'class': 'tr', 'style': 'cursor:pointer', 'click': () => this.showDetails(g.sample) }, [
 				E('td', { 'class': 'td', 'style': 'text-align:right' }, [ String(g.count) ]),
 				E('td', { 'class': 'td', 'style': 'white-space:nowrap', 'click': (ev) => ev.stopPropagation() }, [ common.ruleLink(g.gid, g.sid) ]),
-				E('td', { 'class': 'td' }, [ g.msg ?? '-', ' ', ...Object.keys(g.actions).map((a) => common.badge(a, common.actionColor(a))) ]),
+				E('td', { 'class': 'td' }, [ g.msg ?? '-', ' ', ...Object.keys(g.actions).map((a) => common.badge(a, common.actionColor(a))), g.sample.tuned ? ' ' : '', common.tunedBadge(g.sample.tuned) ]),
 				E('td', { 'class': 'td', 'style': 'word-break:break-all' }, [ topAddrs(g.srcs) ]),
 				E('td', { 'class': 'td', 'style': 'word-break:break-all' }, [ topAddrs(g.dsts) ]),
 				E('td', { 'class': 'td', 'style': 'white-space:nowrap' }, [ common.fmtTime(g.last) ])
@@ -140,13 +141,17 @@ return view.extend({
 	update() {
 		const list = this.filtered();
 		const grouped = this.fView.value === 'grouped';
-		dom.content(this.countNode, _('%d of %d loaded alerts').format(list.length, this.alerts.length));
+		dom.content(this.countNode, [
+			_('%d of %d loaded alerts').format(list.length, this.alerts.length),
+			this.hidden ? ' · ' + _('%d from disabled or suppressed rules hidden').format(this.hidden) : ''
+		]);
 		dom.content(this.tableNode, grouped ? this.renderGrouped(list) : this.renderEvents(list));
 	},
 
 	reload() {
-		return common.callAlerts(+this.fLimit.value).then((res) => {
+		return common.callAlerts(+this.fLimit.value, this.fAll.checked).then((res) => {
 			this.alerts = res.alerts ?? [];
+			this.hidden = res.hidden ?? 0;
 			this.update();
 		});
 	},
@@ -230,6 +235,8 @@ return view.extend({
 
 	render([ res, st ]) {
 		this.alerts = res.alerts ?? [];
+		this.hidden = res.hidden ?? 0;
+		this.fAll = E('input', { 'type': 'checkbox', 'checked': this.showAll ? '' : null, 'change': () => { this.page = 0; this.reload(); } });
 
 		const sel = (opts, value, title) => {
 			const s = E('select', { 'class': 'cbi-input-select', 'title': title, 'change': () => { this.page = 0; this.update(); } },
@@ -263,6 +270,7 @@ return view.extend({
 		const toolbar2 = E('div', { 'style': 'display:flex;flex-wrap:wrap;gap:.5em;align-items:center;margin-bottom:.8em' }, [
 			this.countNode,
 			E('span', { 'style': 'flex:1' }),
+			E('label', { 'style': 'display:flex;align-items:center;gap:.3em', 'title': _('Alerts logged before a rule was disabled or suppressed') }, [ this.fAll, _('Show disabled/suppressed rules') ]),
 			E('label', { 'style': 'display:flex;align-items:center;gap:.3em' }, [ this.fAuto, _('Auto refresh') ]),
 			E('button', { 'class': 'btn cbi-button-neutral', 'click': ui.createHandlerFn(this, 'reload') }, [ _('Refresh') ]),
 			E('button', { 'class': 'btn cbi-button-neutral', 'click': ui.createHandlerFn(this, 'handleExport') }, [ _('Export CSV') ]),

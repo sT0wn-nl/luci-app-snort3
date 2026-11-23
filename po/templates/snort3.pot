@@ -142,6 +142,18 @@ msgstr ""
 msgid "NFQ chain hook is \"%s\": only traffic to or from the router itself is inspected. Use \"forward\" to inspect and block traffic between LAN and internet."
 msgstr ""
 
+msgid "%d alert(s) from rules that are now disabled or suppressed are not shown; they were logged before the change."
+msgstr ""
+
+msgid "Show them"
+msgstr ""
+
+msgid "rule disabled"
+msgstr ""
+
+msgid "suppressed"
+msgstr ""
+
 msgid "Manual configuration mode."
 msgstr ""
 
@@ -206,6 +218,9 @@ msgid "Last seen"
 msgstr ""
 
 msgid "%d of %d loaded alerts"
+msgstr ""
+
+msgid "%d from disabled or suppressed rules hidden"
 msgstr ""
 
 msgid "Looking up rule…"
@@ -287,6 +302,12 @@ msgid "Last %d"
 msgstr ""
 
 msgid "Number of alerts to load"
+msgstr ""
+
+msgid "Alerts logged before a rule was disabled or suppressed"
+msgstr ""
+
+msgid "Show disabled/suppressed rules"
 msgstr ""
 
 msgid "Auto refresh"
@@ -1388,6 +1409,9 @@ msgid "Snort IDS – Statistics"
 msgstr ""
 
 msgid "Insight into what Snort detects, how effective the rules are and how well Snort performs. Statistics are based on the logged alerts (at most the last 50,000) and Snort's performance monitor."
+msgstr ""
+
+msgid "Include disabled and suppressed rules"
 msgstr ""
 
 msgid "An address is required when tracking by source or destination"

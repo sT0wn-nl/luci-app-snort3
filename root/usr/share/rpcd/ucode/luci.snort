@@ -180,6 +180,33 @@ function category(msg, gid) {
 	return (int(gid ?? 1) == 1) ? 'OTHER' : `GID ${gid}`;
 }
 
+// Rules that are currently switched off: disabled SIDs and categories, and
+// suppressions that cover a whole rule (no address scope).
+function tuned_rules(cfg) {
+	let t = { sids: {}, cats: {}, sup: {} };
+	for (let k in cfg.disabled_sid) {
+		let m = match(k, /^([0-9]+):([0-9]+)$/) ?? match(k, /^()([0-9]+)$/);
+		if (m) t.sids[`${m[1] || 1}:${m[2]}`] = true;
+	}
+	for (let c in cfg.disabled_category)
+		t.cats[c] = true;
+	cursor().foreach('snort', 'suppress', (s) => {
+		if (s.enabled != '0' && match(s.sid ?? '', /^[0-9]+$/) && !(s.track in [ 'by_src', 'by_dst' ]))
+			t.sup[`${match(s.gid ?? '', /^[0-9]+$/) ? s.gid : 1}:${s.sid}`] = true;
+	});
+	return t;
+}
+
+// 'disabled', 'suppressed' or null for an alert
+function tuned_state(a, t) {
+	let key = `${a.gid ?? 1}:${a.sid ?? 0}`;
+	if (t.sids[key] || t.cats[category(a.msg, a.gid)])
+		return 'disabled';
+	if (t.sup[key])
+		return 'suppressed';
+	return null;
+}
+
 // Count rules in a file: active, disabled via LuCI (disabled_sid or
 // disabled_category, applied as rule states) and commented out in the file.
 function count_rules(path, dis) {
@@ -400,26 +427,43 @@ const methods = {
 	},
 
 	getAlerts: {
-		args: { limit: 500 },
+		args: { limit: 500, all: false },
 		call: function(req) {
 			let cfg = config();
 			let limit = int(req.args?.limit ?? 500);
 			if (limit < 1 || limit > MAX_ALERTS)
 				limit = 500;
-			let all = read_alert_lines(cfg, limit);
-			let alerts = slice(all, -limit);
-			return { alerts: reverse(alerts), files: alert_files(cfg), log_dir: cfg.log_dir, logging: cfg.logging == '1' };
+			let t = tuned_rules(cfg);
+			let hidden = 0;
+			let alerts = [];
+			for (let a in read_alert_lines(cfg, limit)) {
+				let st = tuned_state(a, t);
+				if (st) {
+					if (!req.args?.all) { hidden++; continue; }
+					a.tuned = st;
+				}
+				push(alerts, a);
+			}
+			alerts = slice(alerts, -limit);
+			return { alerts: reverse(alerts), hidden: hidden, files: alert_files(cfg), log_dir: cfg.log_dir, logging: cfg.logging == '1' };
 		}
 	},
 
 	getStats: {
-		args: { range: 0 },
+		args: { range: 0, all: false },
 		call: function(req) {
 			let cfg = config();
 			let range = int(req.args?.range ?? 0);
 			let now = time() * 1000;
 			let from = (range > 0) ? now - range * 1000 : 0;
 			let alerts = filter(read_alert_lines(cfg, STATS_LINES), (a) => !from || (a.ts ?? 0) >= from);
+			let hidden = 0;
+			if (!req.args?.all) {
+				let t = tuned_rules(cfg);
+				let n = length(alerts);
+				alerts = filter(alerts, (a) => !tuned_state(a, t));
+				hidden = n - length(alerts);
+			}
 
 			let first = null, last = null;
 			for (let a in alerts) {
@@ -515,7 +559,7 @@ const methods = {
 			const toplist = (m, n) => slice(sort(map(keys(m), (k) => ({ key: k, count: m[k] })), (a, b) => b.count - a.count), 0, n);
 
 			return {
-				range: range, now: now, total: length(alerts), truncated: length(alerts) >= STATS_LINES,
+				range: range, now: now, total: length(alerts), hidden: hidden, truncated: length(alerts) >= STATS_LINES,
 				first: first, last: last, bucket: bsize, buckets: buckets, heat: heat,
 				distinct_rules: length(rlist), unique_srcs: length(keys(srcs)), unique_dsts: length(keys(dsts)),
 				rules: slice(rlist, 0, 50), counts: cumulative,

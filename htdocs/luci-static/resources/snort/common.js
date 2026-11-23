@@ -10,8 +10,8 @@
 
 const callStatus = rpc.declare({ object: 'luci.snort', method: 'getStatus', expect: { '': {} } });
 const callInfo = rpc.declare({ object: 'luci.snort', method: 'getInfo', expect: { '': {} } });
-const callAlerts = rpc.declare({ object: 'luci.snort', method: 'getAlerts', params: [ 'limit' ], expect: { '': {} } });
-const callStats = rpc.declare({ object: 'luci.snort', method: 'getStats', params: [ 'range' ], expect: { '': {} } });
+const callAlerts = rpc.declare({ object: 'luci.snort', method: 'getAlerts', params: [ 'limit', 'all' ], expect: { '': {} } });
+const callStats = rpc.declare({ object: 'luci.snort', method: 'getStats', params: [ 'range', 'all' ], expect: { '': {} } });
 const callPerf = rpc.declare({ object: 'luci.snort', method: 'getPerf', params: [ 'range' ], expect: { '': {} } });
 const callCategories = rpc.declare({ object: 'luci.snort', method: 'getCategories', expect: { '': {} } });
 const callClearAlerts = rpc.declare({ object: 'luci.snort', method: 'clearAlerts', expect: { '': {} } });
@@ -280,6 +280,26 @@ return baseclass.extend({
 		if (mode === 'ips' && method === 'nfq' && chain && chain !== 'forward')
 			return { level: 'warning', text: _('NFQ chain hook is "%s": only traffic to or from the router itself is inspected. Use "forward" to inspect and block traffic between LAN and internet.').format(chain) };
 		return null;
+	},
+
+	/* Note about alerts of rules that are now disabled or suppressed. */
+	hiddenNote(n, showHref, onShow) {
+		if (!n)
+			return '';
+		return E('div', { 'class': 'alert-message notice', 'style': 'margin:.5em 0' }, [
+			_('%d alert(s) from rules that are now disabled or suppressed are not shown; they were logged before the change.').format(n), ' ',
+			onShow
+				? E('a', { 'href': '#', 'click': (ev) => { ev.preventDefault(); onShow(); } }, [ _('Show them') ])
+				: E('a', { 'href': showHref || L.url('admin/services/snort/alerts') + '?all=1' }, [ _('Show them') ])
+		]);
+	},
+
+	tunedBadge(state) {
+		if (state === 'disabled')
+			return this.badge(_('rule disabled'), 'grey');
+		if (state === 'suppressed')
+			return this.badge(_('suppressed'), 'grey');
+		return '';
 	},
 
 	/* Notices shared by several pages. */

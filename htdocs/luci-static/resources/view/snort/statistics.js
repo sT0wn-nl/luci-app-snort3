@@ -38,11 +38,13 @@ return view.extend({
 	range: 604800,
 
 	load() {
-		const r = new URLSearchParams(window.location.search).get('range');
+		const qs = new URLSearchParams(window.location.search);
+		const r = qs.get('range');
+		this.all = qs.get('all') === '1';
 		if (r != null && RANGES.some((x) => String(x[0]) === r))
 			this.range = +r;
 		return Promise.all([
-			common.callStats(this.range),
+			common.callStats(this.range, this.all),
 			common.callPerf(this.range || 2592000),
 			common.callStatus(),
 			common.callInfo()
@@ -350,6 +352,7 @@ return view.extend({
 		dom.content(this.body, [
 			...common.notices(st, 'statistics'),
 			(!st.logging && !st.manual) ? E('div', { 'class': 'alert-message warning' }, [ _('Alert logging is disabled, statistics stay empty.') ]) : '',
+			this.all ? '' : common.hiddenNote(s.hidden, null, () => { this.allBox.checked = true; this.all = true; this.reload(); }),
 			this.section(_('Summary'), null, this.renderSummary(s, info)),
 			this.section(_('Alerts over time'), _('Stacked by rule priority (from the rule\'s classtype). Hover a column for details.'), this.renderTimeline(s)),
 			this.section(_('Activity by weekday and hour'), _('Reveals patterns such as nightly scans or alerts during office hours.'), this.renderHeatmap(s)),
@@ -363,7 +366,7 @@ return view.extend({
 
 	reload() {
 		return Promise.all([
-			common.callStats(this.range),
+			common.callStats(this.range, this.all),
 			common.callPerf(this.range || 2592000),
 			common.callStatus(),
 			common.callInfo(),
@@ -395,6 +398,13 @@ return view.extend({
 			]),
 			E('div', { 'style': 'display:flex;gap:.5em;align-items:center;flex-wrap:wrap;margin-bottom:1em' }, [
 				E('label', {}, [ _('Period') + ': ' ]), sel,
+				E('label', { 'style': 'display:flex;align-items:center;gap:.3em;margin-left:1em' }, [
+					this.allBox = E('input', { 'type': 'checkbox', 'checked': this.all ? '' : null, 'change': (ev) => {
+						this.all = ev.target.checked;
+						this.reload();
+					} }),
+					_('Include disabled and suppressed rules')
+				]),
 				E('button', { 'class': 'btn cbi-button-neutral', 'click': ui.createHandlerFn(this, 'reload') }, [ _('Refresh') ])
 			]),
 			this.body

@@ -145,6 +145,18 @@ msgstr "Interface %s is geen Ethernet-apparaat; de %s-DAQ kan daar niet op luist
 msgid "NFQ chain hook is \"%s\": only traffic to or from the router itself is inspected. Use \"forward\" to inspect and block traffic between LAN and internet."
 msgstr "De NFQ-chain-hook is \"%s\": alleen verkeer van of naar de router zelf wordt geïnspecteerd. Gebruik \"forward\" om verkeer tussen LAN en internet te inspecteren en te blokkeren."
 
+msgid "%d alert(s) from rules that are now disabled or suppressed are not shown; they were logged before the change."
+msgstr "%d alert(s) van regels die nu uitgeschakeld of onderdrukt zijn worden niet getoond; ze zijn gelogd vóór de wijziging."
+
+msgid "Show them"
+msgstr "Toon ze"
+
+msgid "rule disabled"
+msgstr "regel uitgeschakeld"
+
+msgid "suppressed"
+msgstr "onderdrukt"
+
 msgid "Manual configuration mode."
 msgstr "Handmatige configuratiemodus."
 
@@ -210,6 +222,9 @@ msgstr "Laatst gezien"
 
 msgid "%d of %d loaded alerts"
 msgstr "%d van %d geladen alerts"
+
+msgid "%d from disabled or suppressed rules hidden"
+msgstr "%d van uitgeschakelde of onderdrukte regels verborgen"
 
 msgid "Looking up rule…"
 msgstr "Regel opzoeken…"
@@ -291,6 +306,12 @@ msgstr "Laatste %d"
 
 msgid "Number of alerts to load"
 msgstr "Aantal te laden alerts"
+
+msgid "Alerts logged before a rule was disabled or suppressed"
+msgstr "Alerts die gelogd zijn voordat een regel werd uitgeschakeld of onderdrukt"
+
+msgid "Show disabled/suppressed rules"
+msgstr "Toon uitgeschakelde/onderdrukte regels"
 
 msgid "Auto refresh"
 msgstr "Automatisch verversen"
@@ -1392,6 +1413,9 @@ msgstr "Snort IDS – Statistieken"
 
 msgid "Insight into what Snort detects, how effective the rules are and how well Snort performs. Statistics are based on the logged alerts (at most the last 50,000) and Snort's performance monitor."
 msgstr "Inzicht in wat Snort detecteert, hoe effectief de regels zijn en hoe goed Snort presteert. De statistieken zijn gebaseerd op de gelogde alerts (maximaal de laatste 50.000) en Snorts prestatiemonitor."
+
+msgid "Include disabled and suppressed rules"
+msgstr "Uitgeschakelde en onderdrukte regels meetellen"
 
 msgid "An address is required when tracking by source or destination"
 msgstr "Bij volgen op bron of bestemming is een adres vereist"
